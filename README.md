@@ -251,6 +251,24 @@ Vous pouvez consulter l’état de votre configuration IKE avec les commandes su
 
 **Réponse :**  
 
+Routeur R1 :
+
+![Question4_R1](images/Q4-R1.PNG)
+
+Routeur R2 :
+
+![Question4_R2](images/Q4-R2.PNG)
+
+La commande `show crypto isakmp policy` permet d'afficher les paramètres pour chaque IKE policy. On peut donc voir que nos configurations se sont bien passées
+
+On peut voir que les deux routeurs n'ont pas la même configuration, le routeur R2 possède 2 suite de protection (une en three key triple DES et l'autre en AES 256 bits) tandis que le routeur R1 en possède que une (uniquement ADS 256 bits).
+
+A noter que le triple DES n'est plus recommandé tandis que l'AES est sûr et recommandé.
+
+En ce qui concerne le hashage, le routeur R1 utilise le MD5 ce qui n'est pas recommandé, pour le routeur R2 on utilise SHA.
+
+En ce qui concerne les group de Diffie-Hellman, plus le nombre est faible plus la sécurité est faible. Cependant un grand nombre implique que la création de la clé met plus de temps. Le groupe 2 est le groupe par défaut car il offre une sécurité de base et de bonne performance. Dans le cas où le renouvellement des clés et l'initialisation du tunnel n'est pas un problème on peut utiliser un meilleur groupe. Celon ce que nous avons cherché il faudrait éviter d'utiliser les groupes en dessous de la valeur 15.
+
 ---
 
 
