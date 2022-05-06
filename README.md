@@ -168,6 +168,10 @@ Pour déclencher et pratiquer les captures vous allez « pinger » votre routeur
 
 **Screenshots :**  
 
+![Capture Wireshark Ping VPC-R1](images/SRX-Labo04-Wireshark-PingVPC-R1.png)
+
+![Debug R1 Ping VPC-R1](images/SRX-Labo04-R1-PingVPCR1.png)
+
 ---
 
 ## Configuration VPN LAN 2 LAN
