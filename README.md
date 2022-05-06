@@ -147,6 +147,8 @@ Pour votre topologie il est utile de contrôler la connectivité entre :
 
 **Réponse :**  
 
+Oui, ils ont tous passés.
+
 ---
 
 - Activation de « debug » et analyse des messages ping.
