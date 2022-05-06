@@ -147,7 +147,7 @@ Pour votre topologie il est utile de contrôler la connectivité entre :
 
 **Réponse :**  
 
-Oui, tous les pings passent après avoir effectué la commande `ip dhcp`
+Oui, tous les pings passent après avoir effectué la commande `ip dhcp`.
 
 ---
 
@@ -171,6 +171,14 @@ Pour déclencher et pratiquer les captures vous allez « pinger » votre routeur
 ---
 
 **Screenshots :**  
+
+Capture du traffic wireshark :
+
+[!Question3_1](./images/Q3-wireshark.PNG)
+
+Capture du traffic ICMP via la commade `debug ip icmp` :
+
+[!Question3_1](./images/Q3-debug.PNG)
 
 ---
 
