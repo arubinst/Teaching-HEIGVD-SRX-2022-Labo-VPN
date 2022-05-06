@@ -108,6 +108,8 @@ Un « protocol » différent de `up` indique la plupart du temps que l’interfa
 
 **Réponse :**  
 
+Étonnamment, non. 
+
 ---
 
 
