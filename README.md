@@ -108,6 +108,14 @@ Un « protocol » différent de `up` indique la plupart du temps que l’interfa
 
 **Réponse :**  
 
+GUILAIN:
+Toutes les interfaces sont bien configurées. Le routage ne s'effectue pas entre
+la machine du LAN 2 et l'extérieur du LAN. Cela était du au fait que le DHCP
+présent sur R2 n'avait pas attribué d'addresse IP au la machine VPC. Pour
+régléer le problème, il a suffit d'effectuer la commande ip `dhcp` sur la
+machine VPC.
+
+
 ---
 
 
@@ -144,6 +152,9 @@ Pour votre topologie il est utile de contrôler la connectivité entre :
 ---
 
 **Réponse :**  
+
+GUILAIN: 
+Oui, tous les pings sont passés.
 
 ---
 
