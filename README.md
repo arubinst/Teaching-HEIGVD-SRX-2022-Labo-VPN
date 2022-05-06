@@ -147,7 +147,7 @@ Pour votre topologie il est utile de contrôler la connectivité entre :
 
 **Réponse :**  
 
-Oui, ils ont tous passés.
+Oui, ils ont tous passé.
 
 ---
 
