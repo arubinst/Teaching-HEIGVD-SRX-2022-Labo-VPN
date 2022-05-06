@@ -275,6 +275,13 @@ Protection suite of priority 20
 
 **Réponse :**  
 
+```
+Keyring      Hostname/Address                            Preshared Key
+
+default      193.100.100.1                               cisco-1
+```
+# TODO
+
 ---
 
 ## Configuration IPsec
