@@ -396,6 +396,8 @@ Pensez à démarrer votre sniffer sur la sortie du routeur R2 vers internet avan
 
 **Réponse :**  
 
+![Capture Wireshark Ping VPC-R1 avec IPSec](images/SRX-Labo04-Wireshark-PingVPC-R1-IPSec.png)
+
 ---
 
 **Question 7: Reportez dans votre rapport une petite explication concernant les différents « timers » utilisés par IKE et IPsec dans cet exercice (recherche Web). :**
