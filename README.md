@@ -174,11 +174,11 @@ Pour déclencher et pratiquer les captures vous allez « pinger » votre routeur
 
 Capture du traffic wireshark :
 
-[!Question3_1](./images/Q3-wireshark.PNG)
+![Question3_1](images/Q3-wireshark.PNG)
 
 Capture du traffic ICMP via la commade `debug ip icmp` :
 
-[!Question3_1](./images/Q3-debug.PNG)
+![Question3_1](images/Q3-debug.PNG)
 
 ---
 
