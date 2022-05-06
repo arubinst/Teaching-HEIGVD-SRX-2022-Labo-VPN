@@ -277,6 +277,17 @@ En ce qui concerne les group de Diffie-Hellman, plus le nombre est faible plus l
 ---
 
 **Réponse :**  
+R1 :
+
+![Question5_R1](/images/Q5-R1.PNG)
+
+R2 :
+
+![Question5_R2](/images/Q5-R2.PNG)
+
+Cette commande permet d'afficher les clés pré-partagées.
+
+On peut voir que la clé est affiché en clair ce qui n'est pas une bonne pratique. De plus la clé devrait être plus compliquée.
 
 ---
 
