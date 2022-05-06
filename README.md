@@ -171,8 +171,11 @@ Pour déclencher et pratiquer les captures vous allez « pinger » votre routeur
 ---
 
 **Screenshots :**  
+Debug des requêtes ICMP sur R1:
+![Screenshot de R1](images/Q3_R1.png)
 
-
+Capture des paquets ICMP entre R2 et Internet:
+![Screenshot de Wireshark](images/Q3_Wireshark.png)
 
 ---
 
