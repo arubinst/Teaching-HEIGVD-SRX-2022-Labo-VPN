@@ -375,6 +375,14 @@ Pensez à démarrer votre sniffer sur la sortie du routeur R2 vers internet avan
 
 **Réponse :**  
 
+Messages de debug ICMP sur R1:
+![Screenshot R1](images/Q6_R1.png)
+
+Capture de Wireshark:
+![Capture Wireshark](images/Q6_Wireshark.png)
+
+On remarque que sur les 5 ping envoyés, seuls 4 sont arrivés au loopback. Ceci peut être du à l'établissement de la connection sécurisée entre R1 et R2. On remarque également sur la capture Wireshark que les paquets ICMP ne sont plus visibles et ils sont sous la forme de paquets ESP (Encapulating Security Payload), on ne peut plus voir le trafic entre R2 et R1 de manière claire. On a également des paquets qui servent à l'échange des clés et à l'établissement de la connection sécurisée avant l'envoi de paquets ICMP.
+
 ---
 
 **Question 7: Reportez dans votre rapport une petite explication concernant les différents « timers » utilisés par IKE et IPsec dans cet exercice (recherche Web). :**
