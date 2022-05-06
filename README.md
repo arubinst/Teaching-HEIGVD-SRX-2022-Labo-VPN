@@ -382,6 +382,12 @@ Pensez à démarrer votre sniffer sur la sortie du routeur R2 vers internet avan
 
 **Réponse :**  
 
+![Question6_1](/images/Q6-ping-R1.PNG)
+
+![Question6_2](/images/Q6-ping.PNG)
+
+
+
 ---
 
 **Question 7: Reportez dans votre rapport une petite explication concernant les différents « timers » utilisés par IKE et IPsec dans cet exercice (recherche Web). :**
