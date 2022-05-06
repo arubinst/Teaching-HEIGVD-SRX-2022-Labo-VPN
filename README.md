@@ -107,6 +107,7 @@ Un « protocol » différent de `up` indique la plupart du temps que l’interfa
 ---
 
 **Réponse :**  
+Oui nous avons rencontré un problème d'allocation d'adresse IP avec VPC. Cette machine n'a pas demandé automatiquement d'adresse IP au démarage via le prottocole dhcp. La commande `ip dhcp` a réglé le problème.
 
 ---
 
