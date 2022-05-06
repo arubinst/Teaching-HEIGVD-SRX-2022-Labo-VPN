@@ -147,6 +147,8 @@ Pour votre topologie il est utile de contrôler la connectivité entre :
 
 **Réponse :**  
 
+Oui, tous les pings passent après avoir effectué la commande `ip dhcp`
+
 ---
 
 - Activation de « debug » et analyse des messages ping.
