@@ -107,7 +107,7 @@ Un « protocol » différent de `up` indique la plupart du temps que l’interfa
 ---
 
 **Réponse :**  
-Oui nous avons rencontré un problème d'allocation d'adresse IP avec VPC. Cette machine n'a pas demandé automatiquement d'adresse IP au démarage via le prottocole dhcp. La commande `ip dhcp` a réglé le problème.
+Tout a fonctionné correctement.
 
 ---
 
@@ -144,7 +144,8 @@ Pour votre topologie il est utile de contrôler la connectivité entre :
 
 ---
 
-**Réponse :**  
+**Réponse :**
+Oui nous avons rencontré un problème d'allocation d'adresse IP avec VPC. Cette machine n'a pas demandé automatiquement d'adresse IP au démarage via le prottocole dhcp. La commande `ip dhcp` a réglé le problème.
 
 ---
 
@@ -168,6 +169,7 @@ Pour déclencher et pratiquer les captures vous allez « pinger » votre routeur
 ---
 
 **Screenshots :**  
+Remarque: Il n'est pas possible d'appliquer des filtres de capture lorsqu'on ouvre Wireshark depuis EveNg. En effet, la fenêtre d'accueil se ferme automatiquement pour laisser place à la fenêtre de capture, sans que l'on ait la possiblité de sélectionner un filtre de capture.
 
 ---
 
