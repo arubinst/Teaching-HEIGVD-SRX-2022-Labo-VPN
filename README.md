@@ -147,7 +147,7 @@ Pour votre topologie il est utile de contrôler la connectivité entre :
 
 **Réponse :**  
 
-Oui, ils ont tous passé.
+Oui, ils ont tous passé (une fois la commande `ip dhcp` faite sur le VPC).
 
 ---
 
@@ -171,6 +171,8 @@ Pour déclencher et pratiquer les captures vous allez « pinger » votre routeur
 ---
 
 **Screenshots :**  
+
+
 
 ---
 
