@@ -108,6 +108,8 @@ Un « protocol » différent de `up` indique la plupart du temps que l’interfa
 
 **Réponse :**  
 
+Nous n'avons pas eu de problèmes lors de l'importation des routeurs. Toutes les interfaces ont leurs adresses IP.
+
 ---
 
 
