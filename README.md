@@ -267,7 +267,7 @@ A noter que le triple DES n'est plus recommandé tandis que l'AES est sûr et re
 
 En ce qui concerne le hashage, le routeur R1 utilise le MD5 ce qui n'est pas recommandé, pour le routeur R2 on utilise SHA.
 
-En ce qui concerne les group de Diffie-Hellman, plus le nombre est faible plus la sécurité est faible. Cependant un grand nombre implique que la création de la clé met plus de temps. Le groupe 2 est le groupe par défaut car il offre une sécurité de base et de bonne performance. Dans le cas où le renouvellement des clés et l'initialisation du tunnel n'est pas un problème on peut utiliser un meilleur groupe. Celon ce que nous avons cherché il faudrait éviter d'utiliser les groupes en dessous de la valeur 15.
+En ce qui concerne les group de Diffie-Hellman, plus le nombre est faible plus la sécurité est faible. Cependant un grand nombre implique que la création de la clé met plus de temps. Le groupe 2 est le groupe par défaut car il offre une sécurité de base et de bonne performance. Dans le cas où le renouvellement des clés et l'initialisation du tunnel n'est pas un problème on peut utiliser un meilleur groupe. Selon ce que nous avons cherché il faudrait éviter d'utiliser les groupes en dessous de la valeur 15.
 
 ---
 
@@ -382,11 +382,15 @@ Pensez à démarrer votre sniffer sur la sortie du routeur R2 vers internet avan
 
 **Réponse :**  
 
+Logging ICMP :
+
 ![Question6_1](/images/Q6-ping-R1.PNG)
+
+Capture wireshark :
 
 ![Question6_2](/images/Q6-ping.PNG)
 
-
+On peut voir sur la capture wireshark que l'adresse de destination et l'adresse source sont maintenant les routeurs R1 et R2, ce qui veut dire que nous sommes en mode tunnel. Comme il s'agit d'un mode tunnel nous pouvons voir que lorsque le traffic atteint le routeur de destination R1 (première capture d'écran) alors les données sont en claires et donc il est possible de voir qui à lancé le ping car dans ce mode ce sont les passerelles qui effectuent le chiffrement avec IPsec et donc les paquets sont en clairs dans le LAN mais pas dans le WAN. Par contre lorsque nous nous trouvons à l'extérieur du LAN (donc dans le WAN) nous pouvons voir que le paquet est chiffré à l'aide de EPS.
 
 ---
 
