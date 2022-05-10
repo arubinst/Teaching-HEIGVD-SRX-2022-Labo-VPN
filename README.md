@@ -400,6 +400,19 @@ On peut voir sur la capture wireshark que l'adresse de destination et l'adresse 
 
 **Réponse :**  
 
+IKE utilise deux timers :
+
+- `lifetime`, ce timer spécifie le temps que va mettre le routeur pour renouveller des SA de la phase 1. Dans notre cas ce sera fait toute les 30 minutes.
+
+- `keepalive`, ce timer spécifie le temps en seconde que le routeur va attendre avant de tester le lien, dans le cas où le destinataire ne répond pas, le routeur renverra jusqu'à deux messages (donc trois en tout) et si le destinataire ne répond toujours pas alors le routeur supprimera le SA. Dans notre cas ce temps est de 30 secondes. (https://www.computerweekly.com/news/2240102144/What-is-the-ISAKMP-policy-and-how-does-it-impact-IPsec-VPN-router-configuration)
+
+IPSec utilise également 2 timers :
+
+- `lifetime`, ce timer spécifie le temps ou la quantitée de données qui doit passer avant que le SA expire. Dans notre cas nous l'avons configuré à 5 minutes ou tout les 2.56MB de données échangées dans le tunnel. (https://community.spiceworks.com/topic/764490-what-is-security-association-lifetime-cisco-site-to-site-vpn)
+
+- `idle-time`, ce timer spécifie le délai d'inactivité des SA IPsec, il permet donc de supprimer les SA associées à des pairs inactifs
+avant l'expiration du timer `lifetime`. Si ce timer n'est pas configuré alors on utilisera uniquement le timer `lifetime`. Nous avons ici configuré ce timer à 15 minutes. (https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_conn_dplane/configuration/15-mt/sec-ipsec-data-plane-15-mt-book/sec-ipsec-idle-tmrs.pdf)
+
 ---
 
 
