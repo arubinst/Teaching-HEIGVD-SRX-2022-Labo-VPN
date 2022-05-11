@@ -427,6 +427,15 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 **Réponse :**  
 
+On utilise les protocoles ESP et IKE.
+
+ESP :
+![Question8_ESP](/images/Q8-ESP.PNG)
+
+IKE :
+![Question8_IKE](/images/Q8-IKE.PNG)
+
+
 ---
 
 
