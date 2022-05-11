@@ -455,12 +455,13 @@ Commande ayant activé le mode tunnel sur R2 :
 
 ---
 
-
 **Question 10: Expliquez quelles sont les parties du paquet qui sont chiffrées. Donnez l’algorithme cryptographique correspondant.**
 
 ---
 
 **Réponse :**  
+
+Comme précisé dans le cours en mode tunnel l'entièreté du paquet est chiffré et authentifié. Lors de l'analyse de la trame dans wireshark à la question 6 nous pouvons voir que le protocole ESP est utilisé pour faire cela. Comme mentionné au à la question 4, l'algorithme utilisé sur R1 est AES et sur R2 il s'agit soit d'AES soit de 3DES.
 
 ---
 
