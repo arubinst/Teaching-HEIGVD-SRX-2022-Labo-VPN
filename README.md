@@ -472,6 +472,10 @@ Comme précisé dans le cours en mode tunnel l'entièreté du paquet est chiffr�
 
 **Réponse :**  
 
+Comme dit à la question 10, tout le paquet est aussi authentifié en mode tunnel à l'exception de la partie donnée dont l'authentification peut-être optionnelle.
+
+L'algorithme MD5 (pour R1) et SHA-1 (pour R2) sont utilisés pour l'authentification (comme dit à la question 4).
+
 ---
 
 
