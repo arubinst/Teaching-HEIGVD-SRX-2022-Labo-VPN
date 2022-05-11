@@ -430,11 +430,12 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 On utilise les protocoles ESP et IKE.
 
 ESP :
+
 ![Question8_ESP](/images/Q8-ESP.PNG)
 
 IKE :
-![Question8_IKE](/images/Q8-IKE.PNG)
 
+![Question8_IKE](/images/Q8-IKE.PNG)
 
 ---
 
@@ -444,6 +445,13 @@ IKE :
 ---
 
 **Réponse :**  
+
+Comme dit précédemment il s'agit d'un mode tunnel, on peut le voir lors de la configuration de R2 mais on peut aussi le déduire par rapport aux remarques faites à la question 6.
+
+Commande ayant activé le mode tunnel sur R2 :
+
+`crypto ipsec transform-set STRONG esp-aes 192 esp-sha-hmac 
+  mode tunnel`
 
 ---
 
