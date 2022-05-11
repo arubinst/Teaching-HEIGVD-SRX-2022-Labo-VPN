@@ -485,4 +485,8 @@ L'algorithme MD5 (pour R1) et SHA-1 (pour R2) sont utilisés pour l'authentifica
 
 **Réponse :**  
 
+Chaque partie authentifiée sera protégée en intégrité cela implique que seule la nouvelle en-tête IP ne le sera pas.
+
+Le même algorithme que pour l'authentification est utilisé, donc il s'agit de SHA-1.
+
 ---
