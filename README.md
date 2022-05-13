@@ -264,7 +264,8 @@ Protection suite of priority 20
         lifetime:               1800 seconds, no volume limit
 ```
 On peut voir qu'on a bien deux policies définies dans notre configuration, chacune avec une priorité différente. La configuration avec la priorité la plus haute sera utilisée, si elle ne peut pas être mise en oeuvre on va passer à celle avec la priorité plus basse. On peut ausso voir que la configuration avec la priorité de 10 utilise des algorithmes moins sécurisés, tels que 3DES et MD5. Cette configuation utilise également une longeur de clé de DH plus petite (1024 bits vs 1536 bits).
-Même que le groupe #5 pour la configuration plus avancée n'est pas suffisant selon les standards actuels, on devrait avoir minimum le groupe #14 (2048 bits) ou #19 (256 bits EC).
+
+Même le groupe #5 pour la configuration plus avancée n'est pas suffisant selon les standards actuels, on devrait avoir minimum le groupe #14 (2048 bits) ou #19 (256 bits EC).
 
 
 ---
@@ -412,6 +413,9 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 **Réponse :**  
 
+Les protocoles utilisés sont:
+* IKE pour l'échange de clés:  on peut le voir dans la configuration de *RX1* et *RX2* au moment de configurer les proposal IKE. On peut aussi le voir dans les captures de paquets, dans la phase 1 le protocole **ISAKMP** est utilisé et des proposals **IKE** sont envoyés par les routeurs pour se mettre d'accord sur une policy d'échange de clés.
+* ESP pour l'encapsulation des paquets
 ---
 
 
