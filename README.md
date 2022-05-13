@@ -180,7 +180,10 @@ Pour déclencher et pratiquer les captures vous allez « pinger » votre routeur
 
 ---
 
-**Screenshots :**  
+**Screenshots :**
+
+Sniff sur R2(e0/0) d'un ping depuis VPC sur R1 :
+![VPC_to_r1](https://github.com/theomi/Teaching-HEIGVD-SRX-2022-Labo-VPN/blob/main/images/PingVPCtoR1.png)
 
 ---
 
