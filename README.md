@@ -281,7 +281,7 @@ Keyring      Hostname/Address                            Preshared Key
 
 default      193.100.100.1                               cisco-1
 ```
-# TODO
+La clé n'est absolument pas assez robuste pour une utilisation en réalité. Il faudrait une clé plus longue et plus compliquée. Si cette clé est cassée, des attaquants pourraient avoir accès aux communications chiffrées dans le tunnel VPN.
 
 ---
 
