@@ -398,6 +398,14 @@ Pensez à démarrer votre sniffer sur la sortie du routeur R2 vers internet avan
 
 ![Capture Wireshark Ping VPC-R1 avec IPSec](images/SRX-Labo04-Wireshark-PingVPC-R1-IPSec.png)
 
+![SRX-Labo04-Wireshark-PingVPC-R1-IPSec-2](figures/SRX-Labo04-Wireshark-PingVPC-R1-IPSec-2.png)
+
+Nous pouvons voir que le trafic est maintenant protégé par le protocole ESP. Il n'est plus
+possible de voir les informations sur les différents paquets comme le montre la
+deuxième capture. On sait juste leur numéro de séquence et le SPI. Il n'est
+également pas possible de déterminer la nature de l'échange, on ne sait pas si
+c'est un PING ou autre chose.
+
 ---
 
 **Question 7: Reportez dans votre rapport une petite explication concernant les différents « timers » utilisés par IKE et IPsec dans cet exercice (recherche Web). :**
