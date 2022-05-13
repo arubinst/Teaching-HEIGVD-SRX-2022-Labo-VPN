@@ -399,6 +399,25 @@ On remarque que sur les 5 ping envoyés, seuls 4 sont arrivés au loopback. Ceci
 
 **Réponse :**  
 
+Pour IKE, il y a deux timers différents :
+`lifetime`: Temps avant que la clef utilisée pour le chiffrement soit remplacée (8h par défaut).
+`keepalive` : Temps entre chaque message DPD (Dead Peer Detection) (mode `periodic`) ou nombre de secondes pendant lesquelles le trafic n'est pas reçu du pair avant que les messages de relance DPD ne soient envoyés s'il y a du trafic de données (IPSec) à envoyer (mode `on-demand`)
+
+Pour IPSec, 
+`idle-time` : Temps avant de supprimer automatiquement les SAs (Security Association) lorsqu'une connexion est inactive.
+`lifetime` : Temps avant que la SA expire (1h par défaut).
+
+
+Sources :
+- [Meraki - IPsec VPN Lifetimes ](https://documentation.meraki.com/MX/Site-to-site_VPN/IPsec_VPN_Lifetimes)
+- [Cisco - Understand IPsec IKEv1 Protocol](https://www.cisco.com/c/en/us/support/docs/security-vpn/ipsec-negotiation-ike-protocols/217432-understand-ipsec-ikev1-protocol.html#anc12)
+- [Cisco - Overview of Keepalive Mechanisms on Cisco IOS](https://www.cisco.com/c/en/us/support/docs/content-networking/keepalives/118390-technote-keepalive-00.html)
+- [Cisco - `crypto isakmp keepalive` command](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/security/a1/sec-a1-cr-book/sec-cr-c4.html#wp2512063629)
+- [Netgate - Phase 1 Settings](https://docs.netgate.com/pfsense/en/latest/vpn/ipsec/configure-p1.html)
+- [Netgate - Phase 2 Settings](https://docs.netgate.com/pfsense/en/latest/vpn/ipsec/configure-p2.html)
+- [Cisco - `crypto ipsec security-association lifetime ` command](https://www.cisco.com/c/en/us/td/docs/ios/12_2/security/command/reference/srfipsec.html#wp1017619)
+- [Cisco - IPsec Security Association Idle Timers](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_conn_dplane/configuration/zZ-Archive/IPsec_Security_Association_Idle_Timers.html)
+
 ---
 
 
