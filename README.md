@@ -420,6 +420,10 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 **Réponse :**  
 
+- IKE est utilisé pour négocier les "proposals" SA
+- ESP est utilisé pour fournir la confidentialité et l'intégrité des données,
+  comme le montre les captures Wireshark
+
 ---
 
 
