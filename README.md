@@ -433,6 +433,8 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 **Réponse :**  
 
+Nous utilisons le transform set STRONG qui utilise le mode tunnel.
+
 ---
 
 
