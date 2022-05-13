@@ -108,6 +108,20 @@ Un « protocol » différent de `up` indique la plupart du temps que l’interfa
 
 **Réponse :**  
 
+L'interface e0/0 n'était pas configuré --> nous l'avons corrigé en suivant le shéma :
+
+
+```
+en
+conf t
+int e0/0
+ip address 193.100.100.1 255.255.255.0
+no shut
+exit
+copy run start
+```
+Puis controlé qu'on arrive bien a ping l'ISP --> OK
+
 ---
 
 
