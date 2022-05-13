@@ -256,6 +256,38 @@ Vous pouvez consulter l’état de votre configuration IKE avec les commandes su
 
 **Réponse :**  
 
+**R1**
+```
+Global IKE policy
+Protection suite of priority 20
+	encryption algorithm:	AES - Advanced Encryption Standard (256 bit keys).
+	hash algorithm:		Secure Hash Standard
+	authentication method:	Pre-Shared Key
+	Diffie-Hellman group:	#5 (1536 bit)
+	lifetime:		1800 seconds, no volume limit
+
+```
+
+
+**R2**
+```
+Global IKE policy
+Protection suite of priority 10
+	encryption algorithm:	Three key triple DES
+	hash algorithm:		Message Digest 5
+	authentication method:	Pre-Shared Key
+	Diffie-Hellman group:	#2 (1024 bit)
+	lifetime:		1800 seconds, no volume limit
+Protection suite of priority 20
+	encryption algorithm:	AES - Advanced Encryption Standard (256 bit keys).
+	hash algorithm:		Secure Hash Standard
+	authentication method:	Pre-Shared Key
+	Diffie-Hellman group:	#5 (1536 bit)
+	lifetime:		1800 seconds, no volume limit
+
+```
+**TODO HERE**
+
 ---
 
 
@@ -264,6 +296,21 @@ Vous pouvez consulter l’état de votre configuration IKE avec les commandes su
 ---
 
 **Réponse :**  
+
+**R1**
+```
+Keyring      Hostname/Address                            Preshared Key
+
+default      193.200.200.1                               cisco-1
+```
+
+**R2**
+```
+Keyring      Hostname/Address                            Preshared Key
+
+default      193.100.100.1                               cisco-1
+```
+
 
 ---
 
