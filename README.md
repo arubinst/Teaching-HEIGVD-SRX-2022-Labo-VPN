@@ -406,6 +406,15 @@ Pensez à démarrer votre sniffer sur la sortie du routeur R2 vers internet avan
 
 **Réponse :**  
 
+Les timers permettent de mitiger les attaques par bruteforce ou toute autre
+méthode pour récupérer les clés. Lors que le timer est écoulé, les clés sont
+à nouveau négociées et sont modifiées. Cela signifique que dans le cas ou un
+attaquant obtiendrait une clé, elle lui permettrait de déchiffrer le traffic que
+pendant une période limitée. Cette période peut etre spécifiée en temps ou en
+volume de traffic, ou les deux. 
+
+Dans notre cas, la durée de vie a été configurée à 2500 kB et / ou 300 secondes.
+
 ---
 
 
