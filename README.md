@@ -434,7 +434,7 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 Les protocoles utilisés sont:
 * IKE pour l'échange de clés:  on peut le voir dans la configuration de *RX1* et *RX2* au moment de configurer les proposal IKE. On peut aussi le voir dans les captures de paquets, dans la phase 1 le protocole **ISAKMP** est utilisé et des proposals **IKE** sont envoyés par les routeurs pour se mettre d'accord sur une policy d'échange de clés.
-* ESP pour l'encapsulation des paquets
+* ESP pour l'encapsulation des paquets: au moment de configurer **IPSec** dans les routeurs on a défini l'utilisation d'**ESP** avec *AES* et *HMAC*. On peut également le voir dans la capture de 
 ---
 
 
@@ -443,7 +443,7 @@ Les protocoles utilisés sont:
 ---
 
 **Réponse :**  
-
+C'est un mode tunnel qui est utilisé, permièrement car dans la configuration des routeurs c'est définit par défaut (avec le `transform-set STRONG`), deuxièmement car dans la capture, les headers des paquets sont également encapsulé et il est donc pas possible de connaitre les IP source et destination car tout le paquet IP a été encapsulé par le routeur et c'est donc l'adresse des routeurs qui est affichée.
 ---
 
 
@@ -452,7 +452,7 @@ Les protocoles utilisés sont:
 ---
 
 **Réponse :**  
-
+Tout le paquet IP est chiffré, header comme contenu. On ne sait donc pas du tout ce qu'il contient ou à qui il est vraiment addressé. Si on regarde les paquets capturés pendant la phase 1 (**IKE**) on remarque que le proposal choisi par les routeur comporte le chiffrement avec *AES-CBC*.
 ---
 
 
@@ -461,7 +461,7 @@ Les protocoles utilisés sont:
 ---
 
 **Réponse :**  
-
+Comme on utilise ESP et pas AH, il n'y a pas de partie authentifiée du paquet. Néanmoins, comme on est en mode tunnel, tout le paquet est encapsulé, ce qui inclus les headers internes. Il y a donc une protection de la part d'ESP pour le paquet IP **interne** mais rien pour le paquet IP **externe**. Une certaine forme d'authenticité est fournie de par l'encapsulation. Pour ce qui est de l'algorithme il s'agit de *AES-CBC*.
 ---
 
 
@@ -470,5 +470,5 @@ Les protocoles utilisés sont:
 ---
 
 **Réponse :**  
-
+Toute la partie IP encapsulée par ESP est protégée en intégrité par le protocole ESP. L'algorithme utilisé pour cela est configuré dans les routeurs (`transform-set STRONG esp-sha-hmac`). On peut également le voir lors de la phase 1, lors de l'échange des proposals entre routeurs. L'algorithme utilisé est donc *HMAC-SHA1*.
 ---
