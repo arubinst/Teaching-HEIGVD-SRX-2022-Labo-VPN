@@ -442,14 +442,20 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 **Réponse :**  
 
+En mode tunnel, l'intégralité des paquets est chiffré. Le chiffrement est
+réalisé par AES 192 bits (Taille de la clé)
+
 ---
 
 
 **Question 11: Expliquez quelles sont les parties du paquet qui sont authentifiées. Donnez l’algorithme cryptographique correspondant.**
 
+
 ---
 
 **Réponse :**  
+En mode tunnel, l'intégralité des paquets est authentifiée.Elle est réalisée
+avec SHA-HMAC
 
 ---
 
@@ -459,5 +465,8 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 ---
 
 **Réponse :**  
+
+En mode tunnel, l'intégralité de l'intégrité des paquets est vérifiée et ce
+grâce à SHA-HMAC.
 
 ---
