@@ -236,11 +236,86 @@ crypto isakmp keepalive 30 3
 
 Vous pouvez consulter l’état de votre configuration IKE avec les commandes suivantes. Faites part de vos remarques :
 
+Il faut faire attenton à la syntaxe cisco. Il faut mettre des `conf t` ainsi que des `exit` aux bons endroits pour appliquer correctement les commandes. A la fin il faut aussi penser à faire un `wr` pour rendre la configuration permanente<br>
+Cela donne les commandes suivantes :
+
+R1
+```
+conf t
+crypto isakmp policy 20
+  encr aes 256
+  authentication pre-share
+  hash sha
+  group 5
+  lifetime 1800
+  exit
+
+crypto isakmp key cisco-1 address 193.200.200.1 no-xauth
+crypto isakmp keepalive 30 3
+exit
+wr
+```
+
+R2
+```
+conf t
+crypto isakmp policy 10
+  encr 3des
+  authentication pre-share
+  hash md5
+  group 2
+  lifetime 1800
+  exit
+crypto isakmp policy 20
+  encr aes 256
+  authentication pre-share
+  hash sha
+  group 5
+  lifetime 1800
+  exit
+crypto isakmp key cisco-1 address 193.100.100.1 no-xauth
+crypto isakmp keepalive 30 3
+exit
+wr
+```
+
 **Question 4: Utilisez la commande `show crypto isakmp policy` et faites part de vos remarques :**
 
 ---
 
 **Réponse :**  
+R1:
+```
+Global IKE policy
+Protection suite of priority 20
+        encryption algorithm:   AES - Advanced Encryption Standard (256 bit keys).
+        hash algorithm:         Secure Hash Standard
+        authentication method:  Pre-Shared Key
+        Diffie-Hellman group:   #5 (1536 bit)
+        lifetime:               1800 seconds, no volume limit
+```
+On peut voir que ce routeur possède une seule policy. Elle utilise des algorithmes plutôt sécurisés.
+
+
+
+
+R2:
+```
+Protection suite of priority 10
+        encryption algorithm:   Three key triple DES
+        hash algorithm:         Message Digest 5
+        authentication method:  Pre-Shared Key
+        Diffie-Hellman group:   #2 (1024 bit)
+        lifetime:               1800 seconds, no volume limit
+Protection suite of priority 20
+        encryption algorithm:   AES - Advanced Encryption Standard (256 bit keys).
+        hash algorithm:         Secure Hash Standard
+        authentication method:  Pre-Shared Key
+        Diffie-Hellman group:   #5 (1536 bit)
+        lifetime:               1800 seconds, no volume limit
+
+```
+On peut voir que le routeur 2 possède deux policies. La première affichée et de priorité 10, elle sera utilisée si l'autre ne fonctionne pas. La seconde affichée est la politique par défaut (elle a une priorité suppérieure). Elle est aussi plus sécurisée que la première car elle utilise de meilleurs algorithmes de chiffrement et de hachage.
 
 ---
 
@@ -250,6 +325,22 @@ Vous pouvez consulter l’état de votre configuration IKE avec les commandes su
 ---
 
 **Réponse :**  
+
+R1:
+```
+Keyring      Hostname/Address                            Preshared Key
+
+default      193.200.200.1                               cisco-1
+```
+
+R2:
+```
+Keyring      Hostname/Address                            Preshared Key
+
+default      193.100.100.1                               cisco-1
+```
+
+On voit pour chacun des routeurs qu'une clé a été générée.
 
 ---
 
@@ -272,33 +363,46 @@ Si inactifs les SA devront être effacés après 15 minutes
 Les commandes de configurations sur R1 ressembleront à ce qui suit :
 
 ```
+conf t
 crypto ipsec security-association lifetime kilobytes 2560
 crypto ipsec security-association lifetime seconds 300
 crypto ipsec transform-set STRONG esp-aes 192 esp-sha-hmac 
   ip access-list extended TO-CRYPT
   permit ip 172.16.1.0 0.0.0.255 172.17.1.0 0.0.0.255
+  exit
 crypto map MY-CRYPTO 10 ipsec-isakmp 
   set peer 193.200.200.1
   set security-association idle-time 900
   set transform-set STRONG 
   match address TO-CRYPT
+  exit
+exit
+wr
 ```
+(nous avons ajouté des conf t et exit) <br><br>
 
 Les commandes de configurations sur R2 ressembleront à ce qui suit :
 
 ```
+conf t
 crypto ipsec security-association lifetime kilobytes 2560
 crypto ipsec security-association lifetime seconds 300
 crypto ipsec transform-set STRONG esp-aes 192 esp-sha-hmac 
   mode tunnel
   ip access-list extended TO-CRYPT
   permit ip 172.17.1.0 0.0.0.255 172.16.1.0 0.0.0.255
+  exit
 crypto map MY-CRYPTO 10 ipsec-isakmp 
   set peer 193.100.100.1
   set security-association idle-time 900
   set transform-set STRONG 
   match address TO-CRYPT
+  exit
+exit
+wr
 ```
+(nous avons ajouté des conf t et exit)<br><br>
+
 
 Vous pouvez contrôler votre configuration IPsec avec les commandes suivantes :
 
@@ -343,6 +447,7 @@ Pensez à démarrer votre sniffer sur la sortie du routeur R2 vers internet avan
 ---
 
 **Réponse :**  
+TODO
 
 ---
 
