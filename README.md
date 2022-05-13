@@ -400,12 +400,12 @@ On remarque que sur les 5 ping envoyés, seuls 4 sont arrivés au loopback. Ceci
 **Réponse :**  
 
 Pour IKE, il y a deux timers différents :
-`lifetime`: Temps avant que la clef utilisée pour le chiffrement soit remplacée (8h par défaut).
-`keepalive` : Temps entre chaque message DPD (Dead Peer Detection) (mode `periodic`) ou nombre de secondes pendant lesquelles le trafic n'est pas reçu du pair avant que les messages de relance DPD ne soient envoyés s'il y a du trafic de données (IPSec) à envoyer (mode `on-demand`)
+- `lifetime`: Temps avant que la clef utilisée pour le chiffrement soit remplacée (8h par défaut).
+- `keepalive` : Temps entre chaque message DPD (Dead Peer Detection) (mode `periodic`) ou nombre de secondes pendant lesquelles le trafic n'est pas reçu du pair avant que les messages de relance DPD ne soient envoyés s'il y a du trafic de données (IPSec) à envoyer (mode `on-demand`)
 
 Pour IPSec, 
-`idle-time` : Temps avant de supprimer automatiquement les SAs (Security Association) lorsqu'une connexion est inactive.
-`lifetime` : Temps avant que la SA expire (1h par défaut).
+- `idle-time` : Temps avant de supprimer automatiquement les SAs (Security Association) lorsqu'une connexion est inactive.
+- `lifetime` : Temps avant que la SA expire (1h par défaut).
 
 
 Sources :
