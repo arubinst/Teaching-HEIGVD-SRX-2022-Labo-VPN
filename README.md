@@ -108,6 +108,8 @@ Un « protocol » différent de `up` indique la plupart du temps que l’interfa
 
 **Réponse :**  
 
+Nous n'avons pas eu de problèmes lors de l'importation des routeurs. Toutes les interfaces ont leurs adresses IP.
+
 ---
 
 
@@ -145,6 +147,8 @@ Pour votre topologie il est utile de contrôler la connectivité entre :
 
 **Réponse :**  
 
+Oui, tous les pings passent après avoir effectué la commande `ip dhcp`.
+
 ---
 
 - Activation de « debug » et analyse des messages ping.
@@ -167,6 +171,14 @@ Pour déclencher et pratiquer les captures vous allez « pinger » votre routeur
 ---
 
 **Screenshots :**  
+
+Capture du traffic wireshark :
+
+![Question3_1](images/Q3-wireshark.PNG)
+
+Capture du traffic ICMP via la commade `debug ip icmp` :
+
+![Question3_1](images/Q3-debug.PNG)
 
 ---
 
@@ -239,6 +251,24 @@ Vous pouvez consulter l’état de votre configuration IKE avec les commandes su
 
 **Réponse :**  
 
+Routeur R1 :
+
+![Question4_R1](images/Q4-R1.PNG)
+
+Routeur R2 :
+
+![Question4_R2](images/Q4-R2.PNG)
+
+La commande `show crypto isakmp policy` permet d'afficher les paramètres pour chaque IKE policy. On peut donc voir que nos configurations se sont bien passées
+
+On peut voir que les deux routeurs n'ont pas la même configuration, le routeur R2 possède 2 suite de protection (une en three key triple DES et l'autre en AES 256 bits) tandis que le routeur R1 en possède que une (uniquement ADS 256 bits).
+
+A noter que le triple DES n'est plus recommandé tandis que l'AES est sûr et recommandé.
+
+En ce qui concerne le hashage, le routeur R1 utilise le MD5 ce qui n'est pas recommandé, pour le routeur R2 on utilise SHA.
+
+En ce qui concerne les group de Diffie-Hellman, plus le nombre est faible plus la sécurité est faible. Cependant un grand nombre implique que la création de la clé met plus de temps. Le groupe 2 est le groupe par défaut car il offre une sécurité de base et de bonne performance. Dans le cas où le renouvellement des clés et l'initialisation du tunnel n'est pas un problème on peut utiliser un meilleur groupe. Selon ce que nous avons cherché il faudrait éviter d'utiliser les groupes en dessous de la valeur 15.
+
 ---
 
 
@@ -247,6 +277,17 @@ Vous pouvez consulter l’état de votre configuration IKE avec les commandes su
 ---
 
 **Réponse :**  
+R1 :
+
+![Question5_R1](/images/Q5-R1.PNG)
+
+R2 :
+
+![Question5_R2](/images/Q5-R2.PNG)
+
+Cette commande permet d'afficher les clés pré-partagées.
+
+On peut voir que la clé est affiché en clair ce qui n'est pas une bonne pratique. De plus la clé devrait être plus compliquée.
 
 ---
 
@@ -341,6 +382,16 @@ Pensez à démarrer votre sniffer sur la sortie du routeur R2 vers internet avan
 
 **Réponse :**  
 
+Logging ICMP :
+
+![Question6_1](/images/Q6-ping-R1.PNG)
+
+Capture wireshark :
+
+![Question6_2](/images/Q6-ping.PNG)
+
+On peut voir sur la capture wireshark que l'adresse de destination et l'adresse source sont maintenant les routeurs R1 et R2, ce qui veut dire que nous sommes en mode tunnel. Comme il s'agit d'un mode tunnel nous pouvons voir que lorsque le traffic atteint le routeur de destination R1 (première capture d'écran) alors les données sont en claires et donc il est possible de voir qui à lancé le ping car dans ce mode ce sont les passerelles qui effectuent le chiffrement avec IPsec et donc les paquets sont en clairs dans le LAN mais pas dans le WAN. Par contre lorsque nous nous trouvons à l'extérieur du LAN (donc dans le WAN) nous pouvons voir que le paquet est chiffré à l'aide de EPS.
+
 ---
 
 **Question 7: Reportez dans votre rapport une petite explication concernant les différents « timers » utilisés par IKE et IPsec dans cet exercice (recherche Web). :**
@@ -348,6 +399,19 @@ Pensez à démarrer votre sniffer sur la sortie du routeur R2 vers internet avan
 ---
 
 **Réponse :**  
+
+IKE utilise deux timers :
+
+- `lifetime`, ce timer spécifie le temps que va mettre le routeur pour renouveller des SA de la phase 1. Dans notre cas ce sera fait toute les 30 minutes.
+
+- `keepalive`, ce timer spécifie le temps en seconde que le routeur va attendre avant de tester le lien, dans le cas où le destinataire ne répond pas, le routeur renverra jusqu'à deux messages (donc trois en tout) et si le destinataire ne répond toujours pas alors le routeur supprimera le SA. Dans notre cas ce temps est de 30 secondes. (https://www.computerweekly.com/news/2240102144/What-is-the-ISAKMP-policy-and-how-does-it-impact-IPsec-VPN-router-configuration)
+
+IPSec utilise également 2 timers :
+
+- `lifetime`, ce timer spécifie le temps ou la quantitée de données qui doit passer avant que le SA expire. Dans notre cas nous l'avons configuré à 5 minutes ou tout les 2.56MB de données échangées dans le tunnel. (https://community.spiceworks.com/topic/764490-what-is-security-association-lifetime-cisco-site-to-site-vpn)
+
+- `idle-time`, ce timer spécifie le délai d'inactivité des SA IPsec, il permet donc de supprimer les SA associées à des pairs inactifs
+avant l'expiration du timer `lifetime`. Si ce timer n'est pas configuré alors on utilisera uniquement le timer `lifetime`. Nous avons ici configuré ce timer à 15 minutes. (https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_conn_dplane/configuration/15-mt/sec-ipsec-data-plane-15-mt-book/sec-ipsec-idle-tmrs.pdf)
 
 ---
 
@@ -363,6 +427,16 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 **Réponse :**  
 
+On utilise les protocoles ESP et IKE.
+
+ESP :
+
+![Question8_ESP](/images/Q8-ESP.PNG)
+
+IKE :
+
+![Question8_IKE](/images/Q8-IKE.PNG)
+
 ---
 
 
@@ -372,14 +446,22 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 **Réponse :**  
 
----
+Comme dit précédemment il s'agit d'un mode tunnel, on peut le voir lors de la configuration de R2 mais on peut aussi le déduire par rapport aux remarques faites à la question 6.
 
+Commande ayant activé le mode tunnel sur R2 :
+
+`crypto ipsec transform-set STRONG esp-aes 192 esp-sha-hmac 
+  mode tunnel`
+
+---
 
 **Question 10: Expliquez quelles sont les parties du paquet qui sont chiffrées. Donnez l’algorithme cryptographique correspondant.**
 
 ---
 
 **Réponse :**  
+
+Comme précisé dans le cours en mode tunnel l'entièreté du paquet est chiffré et authentifié. Lors de l'analyse de la trame dans wireshark à la question 6 nous pouvons voir que le protocole ESP est utilisé pour faire cela. Comme mentionné au à la question 4, l'algorithme utilisé sur R1 est AES et sur R2 il s'agit soit d'AES soit de 3DES.
 
 ---
 
@@ -390,6 +472,10 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 **Réponse :**  
 
+Comme dit à la question 10, tout le paquet est aussi authentifié en mode tunnel à l'exception de la partie donnée dont l'authentification peut-être optionnelle.
+
+L'algorithme MD5 (pour R1) et SHA-1 (pour R2) sont utilisés pour l'authentification (comme dit à la question 4).
+
 ---
 
 
@@ -398,5 +484,9 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 ---
 
 **Réponse :**  
+
+Chaque partie authentifiée sera protégée en intégrité cela implique que seule la nouvelle en-tête IP ne le sera pas.
+
+Le même algorithme que pour l'authentification est utilisé, donc il s'agit de SHA-1.
 
 ---
