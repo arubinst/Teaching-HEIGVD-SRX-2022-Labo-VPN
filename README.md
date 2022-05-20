@@ -424,14 +424,14 @@ Pensez à démarrer votre sniffer sur la sortie du routeur R2 vers internet avan
 **Question 7: Reportez dans votre rapport une petite explication concernant les différents « timers » utilisés par IKE et IPsec dans cet exercice (recherche Web). :**
 
 On voit 3 timers dans les configurations proposées ci-dessus (R1 et R2) :
-	1. security-association lifetime seconds 300 --> Au bout de 300 secondes la SA expire
-  2. security-association lifetime kilobytes 2560 --> Au bout de 2.5MB la SA expire
-	3. security-association idle-time 900
-  
-  Concernant les 2 premiers timers, Ils sont globaux aux SA et les font expirer dès que l'un des 2 (timer) est arrivé au bout.
-  Pour le 3ème "idle-time", elle est spcéifique un Peer (hôte), elle permet de faire expiré les SA d'un hôte inactif avant l'expiration des timers globaux
-  (1,2)
 
+1. security-association lifetime seconds 300 --> Au bout de 300 secondes la SA expire
+2. security-association lifetime kilobytes 2560 --> Au bout de 2.5MB la SA expire
+3. security-association idle-time 900 
+  
+Concernant les 2 premiers timers, Ils sont globaux aux SA et les font expirer dès que l'un des 2 (timer) est arrivé au bout.
+Pour le 3ème "idle-time", elle est spcéifique un Peer (hôte), elle permet de faire expiré les SA d'un hôte inactif avant l'expiration des timers globaux
+(1,2)
 
 ---
 
