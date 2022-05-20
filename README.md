@@ -478,7 +478,8 @@ Tout le paquet IP est chiffré, header comme contenu. On ne sait donc pas du tou
 
 Comme on utilise ESP et pas AH, il n'y a pas de partie authentifiée du paquet. Néanmoins, comme on est en mode tunnel, tout le paquet est encapsulé, ce qui inclus les headers internes. Il y a donc une protection de la part d'ESP pour le paquet IP **interne** mais rien pour le paquet IP **externe**. Une certaine forme d'authenticité est fournie par l'encapsulation.
 
-On peut déduire, lors de l'échange des proposals entre routeurs, que l'algorithme utilisé est *HMAC-SHA1* :
+L'algorithme utilisé pour l'authenticité est *HMAC-SHA1*, comme configuré dans les routeurs (`transform-set STRONG esp-sha-hmac`).
+On peut également le déduire, lors de l'échange des proposals entre routeurs :
 
 ![proof](images/Q11_proof.png)
 
@@ -491,6 +492,6 @@ On peut déduire, lors de l'échange des proposals entre routeurs, que l'algorit
 
 **Réponse :**
 
-Toute la partie IP encapsulée par ESP est protégée en intégrité par le protocole ESP. L'algorithme utilisé pour cela est configuré dans les routeurs (`transform-set STRONG esp-sha-hmac`). Comme l'algorithme utilisé est *HMAC-SHA1* pour l'authenticité, celui protège également l'intégrité du message (car c'est un *MAC*).
+Toute la partie IP encapsulée par ESP est protégée en intégrité par le protocole ESP. Comme l'algorithme utilisé est *HMAC-SHA1* pour l'authenticité, celui protège également l'intégrité du message (car c'est un *MAC*).
 
 ---
