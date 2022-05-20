@@ -263,7 +263,7 @@ Protection suite of priority 20
         Diffie-Hellman group:   #5 (1536 bit)
         lifetime:               1800 seconds, no volume limit
 ```
-On peut voir qu'on a bien deux policies définies dans notre configuration, chacune avec une priorité différente. La configuration avec la priorité la plus haute sera utilisée, si elle ne peut pas être mise en oeuvre on va passer à celle avec la priorité plus basse. On peut ausso voir que la configuration avec la priorité de 10 utilise des algorithmes moins sécurisés, tels que 3DES et MD5. Cette configuation utilise également une longeur de clé de DH plus petite (1024 bits vs 1536 bits).
+On peut voir qu'on a bien deux policies définies dans notre configuration, chacune avec une priorité différente. La configuration avec la priorité la plus haute sera utilisée, si elle ne peut pas être mise en oeuvre on va passer à celle avec la priorité plus basse. On peut aussi voir que la configuration avec la priorité de 10 utilise des algorithmes moins sécurisés, tels que 3DES et MD5. Cette configuation utilise également une longeur de clé de DH plus petite (1024 bits vs 1536 bits).
 
 Même le groupe #5 pour la configuration plus avancée n'est pas suffisant selon les standards actuels, on devrait avoir minimum le groupe #14 (2048 bits) ou #19 (256 bits EC).
 
