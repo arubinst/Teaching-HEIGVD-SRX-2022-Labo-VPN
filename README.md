@@ -108,11 +108,13 @@ Un « protocol » différent de `up` indique la plupart du temps que l’interfa
 
 **Réponse :**  
 
+GUILAIN:
 Toutes les interfaces sont bien configurées. Le routage ne s'effectue pas entre
 la machine du LAN 2 et l'extérieur du LAN. Cela était du au fait que le DHCP
 présent sur R2 n'avait pas attribué d'addresse IP au la machine VPC. Pour
 régléer le problème, il a suffit d'effectuer la commande ip `dhcp` sur la
 machine VPC.
+
 
 ---
 
@@ -151,6 +153,7 @@ Pour votre topologie il est utile de contrôler la connectivité entre :
 
 **Réponse :**  
 
+GUILAIN: 
 Oui, tous les pings sont passés.
 
 ---
@@ -247,6 +250,10 @@ Vous pouvez consulter l’état de votre configuration IKE avec les commandes su
 
 **Question 4: Utilisez la commande `show crypto isakmp policy` et faites part de vos remarques :**
 
+Lors de la négociation, la priorité la plus haute est appliquée en première si
+les deux appareils peuvent les appliquer. Sinon les autres configurations sont
+testés dan l'ordre decroissant de priorité
+
 ---
 
 **Réponse :**  
@@ -278,6 +285,17 @@ Protection suite of priority 20
 	Diffie-Hellman group:	#5 (1536 bit)
 	lifetime:		1800 seconds, no volume limit
 ```
+
+On peut constater que RX1 possède une configuration de priorité 20 qui utilise
+AES avec une clé de 256 bits ainsi qu'une durée de vie de 1800 secondes.
+
+En revanche RX2 possède deux configuration avec priorités différentes. Une à 10
+qui utilise 3DES et une à 20 qui utilise AES.
+
+Lors de la négociation, la priorité la plus haute est appliquée en première si
+les deux appareils peuvent les appliquer. Sinon les autres configurations sont
+testés dan l'ordre décroissant de priorité
+
 ---
 
 
