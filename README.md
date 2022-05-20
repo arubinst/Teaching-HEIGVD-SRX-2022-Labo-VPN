@@ -445,7 +445,9 @@ Les protocoles utilisés sont:
 
 **Réponse :**
 
-C'est un mode tunnel qui est utilisé, permièrement car dans la configuration des routeurs c'est définit par défaut (avec le `transform-set STRONG`), deuxièmement car dans la capture, les headers des paquets sont également encapsulé et il est donc pas possible de connaitre les IP source et destination car tout le paquet IP a été encapsulé par le routeur et c'est donc l'adresse des routeurs qui est affichée.
+C'est un mode tunnel qui est utilisé, premièrement car dans la configuration des routeurs c'est définit par défaut (avec le `transform-set STRONG`), deuxièmement car dans la capture suivante, les headers des paquets sont également encapsulé et il est donc pas possible de connaitre les IP source et destination d'origine car tout le paquet IP a été encapsulé par le routeur et c'est donc l'adresse des routeurs qui est affichée.
+
+![tunnel proof](images/Q9_tunnel_proof.png)
 
 Configuration Cisco:
 ```ios
