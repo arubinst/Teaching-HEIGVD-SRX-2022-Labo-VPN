@@ -445,7 +445,7 @@ Les protocoles utilisés sont:
 
 **Réponse :**
 
-C'est un mode tunnel qui est utilisé, premièrement car dans la configuration des routeurs c'est définit par défaut (avec le `transform-set STRONG`), deuxièmement car dans la capture suivante, les headers des paquets sont également encapsulé et il est donc pas possible de connaitre les IP source et destination d'origine car tout le paquet IP a été encapsulé par le routeur et c'est donc l'adresse des routeurs qui est affichée.
+C'est un mode tunnel qui est utilisé, premièrement car dans la configuration des routeurs c'est défini par défaut (avec le `transform-set STRONG`), deuxièmement car dans la capture suivante, les headers des paquets sont également encapsulé et il est donc pas possible de connaitre les IP source et destination d'origine car tout le paquet IP a été encapsulé par le routeur et c'est donc l'adresse des routeurs qui est affichée.
 
 ![tunnel proof](images/Q9_tunnel_proof.png)
 
@@ -474,7 +474,7 @@ Tout le paquet IP est chiffré, header comme contenu. On ne sait donc pas du tou
 
 **Réponse :**
 
-Comme on utilise ESP et pas AH, il n'y a pas de partie authentifiée du paquet. Néanmoins, comme on est en mode tunnel, tout le paquet est encapsulé, ce qui inclus les headers internes. Il y a donc une protection de la part d'ESP pour le paquet IP **interne** mais rien pour le paquet IP **externe**. Une certaine forme d'authenticité est fournie de par l'encapsulation. Pour ce qui est de l'algorithme il s'agit de *AES-CBC*.
+Comme on utilise ESP et pas AH, il n'y a pas de partie authentifiée du paquet. Néanmoins, comme on est en mode tunnel, tout le paquet est encapsulé, ce qui inclus les headers internes. Il y a donc une protection de la part d'ESP pour le paquet IP **interne** mais rien pour le paquet IP **externe**. Une certaine forme d'authenticité est fournie par l'encapsulation. Pour ce qui est de l'algorithme il s'agit de *AES-CBC*.
 
 ---
 
