@@ -108,6 +108,8 @@ Un « protocol » différent de `up` indique la plupart du temps que l’interfa
 
 **Réponse :**  
 
+Étonnamment, non. 
+
 ---
 
 
@@ -145,6 +147,8 @@ Pour votre topologie il est utile de contrôler la connectivité entre :
 
 **Réponse :**  
 
+Oui, ils ont tous passé (une fois la commande `ip dhcp` faite sur le VPC).
+
 ---
 
 - Activation de « debug » et analyse des messages ping.
@@ -167,6 +171,11 @@ Pour déclencher et pratiquer les captures vous allez « pinger » votre routeur
 ---
 
 **Screenshots :**  
+Debug des requêtes ICMP sur R1:
+![Screenshot de R1](images/Q3_R1.png)
+
+Capture des paquets ICMP entre R2 et Internet:
+![Screenshot de Wireshark](images/Q3_Wireshark.png)
 
 ---
 
@@ -239,6 +248,26 @@ Vous pouvez consulter l’état de votre configuration IKE avec les commandes su
 
 **Réponse :**  
 
+```
+Global IKE policy
+Protection suite of priority 10
+        encryption algorithm:   Three key triple DES
+        hash algorithm:         Message Digest 5
+        authentication method:  Pre-Shared Key
+        Diffie-Hellman group:   #2 (1024 bit)
+        lifetime:               1800 seconds, no volume limit
+Protection suite of priority 20
+        encryption algorithm:   AES - Advanced Encryption Standard (256 bit keys).
+        hash algorithm:         Secure Hash Standard
+        authentication method:  Pre-Shared Key
+        Diffie-Hellman group:   #5 (1536 bit)
+        lifetime:               1800 seconds, no volume limit
+```
+On peut voir qu'on a bien deux policies définies dans notre configuration, chacune avec une priorité différente. La configuration avec la priorité la plus haute sera utilisée, si elle ne peut pas être mise en oeuvre on va passer à celle avec la priorité plus basse. On peut aussi voir que la configuration avec la priorité de 10 utilise des algorithmes moins sécurisés, tels que 3DES et MD5. Cette configuation utilise également une longeur de clé de DH plus petite (1024 bits vs 1536 bits).
+
+Même le groupe #5 pour la configuration plus avancée n'est pas suffisant selon les standards actuels, on devrait avoir minimum le groupe #14 (2048 bits) ou #19 (256 bits EC).
+
+
 ---
 
 
@@ -247,6 +276,13 @@ Vous pouvez consulter l’état de votre configuration IKE avec les commandes su
 ---
 
 **Réponse :**  
+
+```
+Keyring      Hostname/Address                            Preshared Key
+
+default      193.100.100.1                               cisco-1
+```
+La clé n'est absolument pas assez robuste pour une utilisation en réalité. Il faudrait une clé plus longue et plus compliquée. Si cette clé est cassée, des attaquants pourraient avoir accès aux communications chiffrées dans le tunnel VPN.
 
 ---
 
@@ -341,6 +377,20 @@ Pensez à démarrer votre sniffer sur la sortie du routeur R2 vers internet avan
 
 **Réponse :**  
 
+Messages de debug ICMP sur R1:
+
+![Screenshot R1](images/Q6_R1.png)
+
+Capture de Wireshark:
+
+![Capture Wireshark](images/Q6_Wireshark.png)
+
+Ping depuis VPC:
+
+![Screenshot VPC](images/Q6_VPC.png)
+
+On remarque que sur les 5 ping envoyés, seuls 4 sont arrivés au loopback. Ceci peut être du à l'établissement de la connection sécurisée entre R1 et R2. On remarque également sur la capture Wireshark que les paquets ICMP ne sont plus visibles et ils sont sous la forme de paquets ESP (Encapulating Security Payload), on ne peut plus voir le trafic entre R2 et R1 de manière claire. On a également des paquets qui servent à l'échange des clés et à l'établissement de la connection sécurisée avant l'envoi de paquets ICMP.
+
 ---
 
 **Question 7: Reportez dans votre rapport une petite explication concernant les différents « timers » utilisés par IKE et IPsec dans cet exercice (recherche Web). :**
@@ -348,6 +398,25 @@ Pensez à démarrer votre sniffer sur la sortie du routeur R2 vers internet avan
 ---
 
 **Réponse :**  
+
+Pour IKE, il y a deux timers différents :
+- `lifetime`: Temps avant que la clef utilisée pour le chiffrement soit remplacée (8h par défaut).
+- `keepalive` : Temps entre chaque message DPD (Dead Peer Detection) (mode `periodic`) ou nombre de secondes pendant lesquelles le trafic n'est pas reçu du pair avant que les messages de relance DPD ne soient envoyés s'il y a du trafic de données (IPSec) à envoyer (mode `on-demand`)
+
+Pour IPSec, 
+- `idle-time` : Temps avant de supprimer automatiquement les SAs (Security Association) lorsqu'une connexion est inactive.
+- `lifetime` : Temps avant que la SA expire (1h par défaut).
+
+
+Sources :
+- [Meraki - IPsec VPN Lifetimes ](https://documentation.meraki.com/MX/Site-to-site_VPN/IPsec_VPN_Lifetimes)
+- [Cisco - Understand IPsec IKEv1 Protocol](https://www.cisco.com/c/en/us/support/docs/security-vpn/ipsec-negotiation-ike-protocols/217432-understand-ipsec-ikev1-protocol.html#anc12)
+- [Cisco - Overview of Keepalive Mechanisms on Cisco IOS](https://www.cisco.com/c/en/us/support/docs/content-networking/keepalives/118390-technote-keepalive-00.html)
+- [Cisco - `crypto isakmp keepalive` command](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/security/a1/sec-a1-cr-book/sec-cr-c4.html#wp2512063629)
+- [Netgate - Phase 1 Settings](https://docs.netgate.com/pfsense/en/latest/vpn/ipsec/configure-p1.html)
+- [Netgate - Phase 2 Settings](https://docs.netgate.com/pfsense/en/latest/vpn/ipsec/configure-p2.html)
+- [Cisco - `crypto ipsec security-association lifetime ` command](https://www.cisco.com/c/en/us/td/docs/ios/12_2/security/command/reference/srfipsec.html#wp1017619)
+- [Cisco - IPsec Security Association Idle Timers](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_conn_dplane/configuration/zZ-Archive/IPsec_Security_Association_Idle_Timers.html)
 
 ---
 
@@ -363,6 +432,10 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 **Réponse :**  
 
+Les protocoles utilisés sont:
+* IKE pour l'échange de clés:  on peut le voir dans la configuration de *RX1* et *RX2* au moment de configurer les proposal IKE. On peut aussi le voir dans les captures de paquets, dans la phase 1 le protocole **ISAKMP** est utilisé et des proposals **IKE** sont envoyés par les routeurs pour se mettre d'accord sur une policy d'échange de clés.
+* ISAKMP est utilisé comme protocole sous-jacent à **IKE** pour établir le *SA* (*Security Association*)
+* ESP pour l'encapsulation des paquets: au moment de configurer **IPSec** dans les routeurs on a défini l'utilisation d'**ESP** avec *AES* et *HMAC*. On peut également le voir dans la capture de Wireshark (cf. Question 6), le protocole détecté est bien **ESP**.
 ---
 
 
@@ -370,8 +443,17 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 ---
 
-**Réponse :**  
+**Réponse :**
 
+C'est un mode tunnel qui est utilisé. Premièrement, dans la configuration des routeurs, c'est défini par défaut (avec le `transform-set STRONG`). Deuxièmement, car dans la capture Wireshark suivante, les headers des paquets sont également encapsulé et il n'est donc pas possible de connaitre les adresses IP source et destination d'origine, car tout le paquet IP a été encapsulé par le routeur. C'est donc l'adresse des routeurs qui est affichée.
+
+![tunnel proof](images/Q9_tunnel_proof.png)
+
+Configuration Cisco:
+```ios
+crypto ipsec transform-set STRONG esp-aes 192 esp-sha-hmac 
+ mode tunnel
+ ```
 ---
 
 
@@ -379,7 +461,11 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 ---
 
-**Réponse :**  
+**Réponse :**
+
+Tout le paquet IP est chiffré, header comme contenu. On ne sait donc pas du tout ce qu'il contient ou à qui il est réellement addressé. On peut voir dans le deuxième paquet capturé pendant la phase 1 (**IKE**) que le proposal, choisi par les routeurs, utilise le chiffrement *AES-CBC* :
+
+![proof](images/Q10_proof.png)
 
 ---
 
@@ -388,7 +474,14 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 ---
 
-**Réponse :**  
+**Réponse :**
+
+Comme on utilise ESP et pas AH, il n'y a pas de partie authentifiée du paquet. Néanmoins, comme on est en mode tunnel, tout le paquet est encapsulé, ce qui inclus les headers internes. Il y a donc une protection de la part d'ESP pour le paquet IP **interne** mais rien pour le paquet IP **externe**. Une certaine forme d'authenticité est fournie par l'encapsulation.
+
+L'algorithme utilisé pour l'authenticité est *HMAC-SHA1*, comme configuré dans les routeurs (`transform-set STRONG esp-sha-hmac`).
+On peut également le déduire, lors de l'échange des proposals entre routeurs :
+
+![proof](images/Q11_proof.png)
 
 ---
 
@@ -397,6 +490,8 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 ---
 
-**Réponse :**  
+**Réponse :**
+
+Toute la partie IP encapsulée par ESP est protégée en intégrité par le protocole ESP. Comme l'algorithme utilisé est *HMAC-SHA1* pour l'authenticité, celui protège également l'intégrité du message (car c'est un *MAC*).
 
 ---
