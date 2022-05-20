@@ -148,7 +148,8 @@ Pour votre topologie il est utile de contrôler la connectivité entre :
 
 ---
 
-**Réponse :**  Oui, après avoir attribué une adresse IP via DHCP à la station VPC.
+**Réponse :**
+VPC n'ayant pas automatiquement récupéré d'adresse IP, nous avons du manuellement lancer "ip dhcp" sur la machine en question, sinon tout les pings ont fonctionnés comme prévu.
 
 ---
 
