@@ -427,15 +427,13 @@ Pensez à démarrer votre sniffer sur la sortie du routeur R2 vers internet avan
 ---
 
 **Réponse :**  
-On voit 3 timers dans les configurations proposées ci-dessus (R1 et R2) :
 
-1. security-association lifetime seconds 300 --> Au bout de 300 secondes la SA expire
-2. security-association lifetime kilobytes 2560 --> Au bout de 2.5MB la SA expire
-3. security-association idle-time 900 
-  
-Concernant les 2 premiers timers, Ils sont globaux aux SA et les font expirer dès que l'un des 2 (timer) est arrivé au bout.
-Pour le 3ème "idle-time", elle est spcéifique un Peer (hôte), elle permet de faire expiré les SA d'un hôte inactif avant l'expiration des timers globaux
-(1,2)
+Timer IKE :
+lifetime : défini à quelle intervalle de temps (dans la phase 1) le routeur regenère des SA
+
+Timer IPSEC :
+lifetime (seconds / kilobytes) : défini au bout de combien de temps / volume de donnée les SA expirent. Dès qu'un des timers est atteint la SA expire.
+idle-time : défini le maximum de temps inactifs d'un peer avant que ses SA soient supprimées, permet notamment de supprimer les SA avant les timers globaux (lifetime)
 
 
 ---
