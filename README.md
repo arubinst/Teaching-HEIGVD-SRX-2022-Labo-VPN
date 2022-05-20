@@ -419,6 +419,16 @@ Pensez à démarrer votre sniffer sur la sortie du routeur R2 vers internet avan
 
 **Réponse :**  
 
+Sur l'analyse Wireshark de R2 (e0/0) lors d'un ping VPC -> Loopback R1 on a :
+
+![WiresharkR2e00](https://github.com/theomi/Teaching-HEIGVD-SRX-2022-Labo-VPN/blob/main/images/VPCPINGVPNR1.png)
+
+On voit bien du traffic partant de R2 vers R1 car nous sommes en mode LAN-to-LAN tunnel et le traffic est bel et bien chiffré.
+
+Du coté de R1 :
+![deubgicmp](https://github.com/theomi/Teaching-HEIGVD-SRX-2022-Labo-VPN/blob/main/images/VPCPINGVPNR1.png)
+
+On a bien le packet déchiffré et on a donc accès aux "vrais" entêtes
 ---
 
 **Question 7: Reportez dans votre rapport une petite explication concernant les différents « timers » utilisés par IKE et IPsec dans cet exercice (recherche Web). :**
