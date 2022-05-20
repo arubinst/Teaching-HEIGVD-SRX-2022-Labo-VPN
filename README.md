@@ -435,7 +435,7 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 Les protocoles utilisés sont:
 * IKE pour l'échange de clés:  on peut le voir dans la configuration de *RX1* et *RX2* au moment de configurer les proposal IKE. On peut aussi le voir dans les captures de paquets, dans la phase 1 le protocole **ISAKMP** est utilisé et des proposals **IKE** sont envoyés par les routeurs pour se mettre d'accord sur une policy d'échange de clés.
 * ISAKMP est utilisé comme protocole sous-jacent à **IKE** pour établir le *SA* (*Security Association*)
-* ESP pour l'encapsulation des paquets: au moment de configurer **IPSec** dans les routeurs on a défini l'utilisation d'**ESP** avec *AES* et *HMAC*. On peut également le voir dans la capture de Wireshark, le protocole détecté est bien **ESP**.
+* ESP pour l'encapsulation des paquets: au moment de configurer **IPSec** dans les routeurs on a défini l'utilisation d'**ESP** avec *AES* et *HMAC*. On peut également le voir dans la capture de Wireshark (cf. Question 6), le protocole détecté est bien **ESP**.
 ---
 
 
@@ -445,7 +445,7 @@ Les protocoles utilisés sont:
 
 **Réponse :**
 
-C'est un mode tunnel qui est utilisé, premièrement car dans la configuration des routeurs c'est défini par défaut (avec le `transform-set STRONG`), deuxièmement car dans la capture suivante, les headers des paquets sont également encapsulé et il est donc pas possible de connaitre les IP source et destination d'origine car tout le paquet IP a été encapsulé par le routeur et c'est donc l'adresse des routeurs qui est affichée.
+C'est un mode tunnel qui est utilisé. Premièrement, dans la configuration des routeurs, c'est défini par défaut (avec le `transform-set STRONG`). Deuxièmement, car dans la capture Wireshark suivante, les headers des paquets sont également encapsulé et il n'est donc pas possible de connaitre les adresses IP source et destination d'origine, car tout le paquet IP a été encapsulé par le routeur. C'est donc l'adresse des routeurs qui est affichée.
 
 ![tunnel proof](images/Q9_tunnel_proof.png)
 
@@ -463,7 +463,9 @@ crypto ipsec transform-set STRONG esp-aes 192 esp-sha-hmac
 
 **Réponse :**
 
-Tout le paquet IP est chiffré, header comme contenu. On ne sait donc pas du tout ce qu'il contient ou à qui il est vraiment addressé. Si on regarde les paquets capturés pendant la phase 1 (**IKE**) on remarque que le proposal choisi par les routeur comporte le chiffrement avec *AES-CBC*.
+Tout le paquet IP est chiffré, header comme contenu. On ne sait donc pas du tout ce qu'il contient ou à qui il est réellement addressé. On peut voir dans le deuxième paquet capturé pendant la phase 1 (**IKE**) que le proposal choisi par les routeur utilise le chiffrement avec *AES-CBC* :
+
+![proof](images/Q10_proof.png)
 
 ---
 
