@@ -457,6 +457,9 @@ TODO
 
 **Réponse :**  
 
+Les timers sont une protection permettant de se protéger contre les attaques qui tentent d'obtenir les clés. Quand le timer arrive à 0, les clés sont supprimées et le processus de génération de clé est relancé. Cela complique les attaques par bruteforce et même dans le cas où une clé est récupérée, elle ne peut pas être utilisée indéfiniment.
+La période peut être du temps ou/et du trafic de données.
+
 ---
 
 
