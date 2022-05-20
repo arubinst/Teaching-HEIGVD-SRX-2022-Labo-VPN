@@ -256,8 +256,6 @@ Dans le cas de notre routeur **R1**, un seul *proposal* est mis en place, et a u
 - Une authentificaion faite par clé prépartagée.
 - Une durée de vie de 30 minutes pour l'association IKE
 
-**R1**
-
 ```text
 Global IKE policy
 Protection suite of priority 20
@@ -273,21 +271,19 @@ Dans le cas de notre routeur **R2**, deux *proposals* sont proposés :
 
 Le premier a une priorité de 10 et utilise :
 
-- Un chiffrement DES 256 bits pour l'échange de clés,
+- Un chiffrement Triple-DES pour l'échange de clés,
 - Un algorithme de hachage MD5 pour la signature des messages,
 - Le groupe Diffie-Hellman n°2 (qui utilise un modulo de 1024 bits) pour générer une clé symétrique pour communiquer via DES
 - Une authentificaion faite par clé prépartagée
 - Une durée de vie de 30 minutes pour l'association IKE
 
-Le second a une priorité de 20 (sur 65543) Il utilise :
+Le second a une priorité de 20 et utilise :
 
 - Un chiffrement AES 256 bits pour l'échange de clés,
 - Un algorithme de hachage SHA-1 pour la signature des messages,
 - Le groupe Diffie-Hellman n°5 (qui utilise un modulo de 1536 bits) pour générer une clé symétrique pour communiquer via AES
 - Une authentificaion faite par clé prépartagée.
 - Une durée de vie de 30 minutes pour l'association IKE
-
-**R2**
 
 ```text
 Global IKE policy
@@ -303,8 +299,9 @@ Protection suite of priority 20
  authentication method: Pre-Shared Key
  Diffie-Hellman group: #5 (1536 bit)
  lifetime:  1800 seconds, no volume limit
-
 ```
+
+Nous remarquons donc que les deux routeurs ont au moins un *proposal* en commun, ce qui est indispensable pour que l'association IKE puisse se faire. Il faut que les deux routeurs aient une politique de sécurité commune.
 
 ---
 
