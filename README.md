@@ -456,7 +456,32 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 ---
 
-**Réponse :**  
+Comme vu dans la question 4, nous mettons en place des _proposals_ IKE sur nos routeurs. Le protocole IKE est donc mis en oeuvre. Pour rappel, la commande `show crypto isakmp policy` nous donne la liste des proposals mis en place sur nos routeurs, ici par exemple sur R1 :
+
+```text
+RX1#show crypto isakmp policy
+
+Global IKE policy
+Protection suite of priority 20
+	encryption algorithm:	AES - Advanced Encryption Standard (256 bit keys).
+	hash algorithm:		Secure Hash Standard
+	authentication method:	Pre-Shared Key
+	Diffie-Hellman group:	#5 (1536 bit)
+	lifetime:		1800 seconds, no volume limit
+```
+
+De plus, la commande `show crypto ipsec transform-set` nous permet d'afficher les _transform sets_ qui sont la spécification des protocoles de sécurité IPSec ESP ou AH (ou les deux). Si l'on exécute cette commande sur notre routeur R1, on remarque que le protocole ESP est mis en œuvre :
+
+```text
+RX1#show crypto ipsec transform-set
+Transform set default: { esp-aes esp-sha-hmac  }
+   will negotiate = { Transport,  },
+
+Transform set STRONG: { esp-192-aes esp-sha-hmac  }
+   will negotiate = { Tunnel,  },
+```
+
+Cependant, aucune mention de AH, nous sommes donc exclusivement sur de l'ESP.
 
 ---
 
@@ -464,7 +489,14 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 ---
 
-**Réponse :**  
+On remarque que dans la configuration fournie pour R2, ESP est configuré en mode tunnel.
+
+```text
+crypto ipsec transform-set STRONG esp-aes 192 esp-sha-hmac 
+  mode tunnel
+  ip access-list extended TO-CRYPT
+  permit ip 172.17.1.0 0.0.0.255 172.16.1.0 0.0.0.255
+ ```
 
 ---
 
@@ -472,7 +504,7 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 ---
 
-**Réponse :**  
+Le mode tunnel d'ESP implique que le paquet entier est chiffré et authentifié. De plus, la proposal commune mise en oeuvre par les deux routeurs utilise un ciffrement de type AES 256-bits.
 
 ---
 
@@ -480,7 +512,7 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 ---
 
-**Réponse :**  
+Tout le contenu du paquet original est authentifié (mode tunnel). L'algorithme de hachage utilisé par les deux routeurs est SHA-1.
 
 ---
 
@@ -488,6 +520,6 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 ---
 
-**Réponse :**  
+L'authentification du paquet implique la vérification de son intégrité. Etant donné que l'intégralité du paquet est authentifiée, il en sera de même pour la protection de l'intégrité. L'algorithme de hachage reste SHA-1.
 
 ---
