@@ -238,6 +238,8 @@ Vous pouvez consulter l’état de votre configuration IKE avec les commandes su
 ---
 
 **Réponse :**  
+On retrouve un résumé des configurations IKE définies juste avant. On peut y voir les algos de hash et de chiffrement
+choisis, la longueur des clés. 
 
 ---
 
@@ -247,6 +249,7 @@ Vous pouvez consulter l’état de votre configuration IKE avec les commandes su
 ---
 
 **Réponse :**  
+On peut voir les clés qui sont ou seront utilisées par les 2 routeurs. On voit aussi l'IP du "voisin" a qui la clé est rattachée.
 
 ---
 
@@ -371,6 +374,7 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 ---
 
 **Réponse :**  
+Il s'agit d'un mode tunnel. Tout le paquet original est encapsulé et chiffré dans un nouveau paquet qui est transmis à l'autre routeur.
 
 ---
 
@@ -380,6 +384,7 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 ---
 
 **Réponse :**  
+L'entierté du paquet original est chiffré par AES-192.
 
 ---
 
@@ -389,6 +394,7 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 ---
 
 **Réponse :**  
+Encore une fois, tout le contenu est authentifié. L'algo utilisé est HMAC basé sur SHA-1.
 
 ---
 
