@@ -463,7 +463,7 @@ crypto ipsec transform-set STRONG esp-aes 192 esp-sha-hmac
 
 **Réponse :**
 
-Tout le paquet IP est chiffré, header comme contenu. On ne sait donc pas du tout ce qu'il contient ou à qui il est réellement addressé. On peut voir dans le deuxième paquet capturé pendant la phase 1 (**IKE**) que le proposal choisi par les routeur utilise le chiffrement avec *AES-CBC* :
+Tout le paquet IP est chiffré, header comme contenu. On ne sait donc pas du tout ce qu'il contient ou à qui il est réellement addressé. On peut voir dans le deuxième paquet capturé pendant la phase 1 (**IKE**) que le proposal, choisi par les routeurs, utilise le chiffrement *AES-CBC* :
 
 ![proof](images/Q10_proof.png)
 
@@ -476,7 +476,11 @@ Tout le paquet IP est chiffré, header comme contenu. On ne sait donc pas du tou
 
 **Réponse :**
 
-Comme on utilise ESP et pas AH, il n'y a pas de partie authentifiée du paquet. Néanmoins, comme on est en mode tunnel, tout le paquet est encapsulé, ce qui inclus les headers internes. Il y a donc une protection de la part d'ESP pour le paquet IP **interne** mais rien pour le paquet IP **externe**. Une certaine forme d'authenticité est fournie par l'encapsulation. Pour ce qui est de l'algorithme il s'agit de *AES-CBC*.
+Comme on utilise ESP et pas AH, il n'y a pas de partie authentifiée du paquet. Néanmoins, comme on est en mode tunnel, tout le paquet est encapsulé, ce qui inclus les headers internes. Il y a donc une protection de la part d'ESP pour le paquet IP **interne** mais rien pour le paquet IP **externe**. Une certaine forme d'authenticité est fournie par l'encapsulation.
+
+On peut déduire, lors de l'échange des proposals entre routeurs, que l'algorithme utilisé est *HMAC-SHA1* :
+
+![proof](images/Q11_proof.png)
 
 ---
 
@@ -487,6 +491,6 @@ Comme on utilise ESP et pas AH, il n'y a pas de partie authentifiée du paquet. 
 
 **Réponse :**
 
-Toute la partie IP encapsulée par ESP est protégée en intégrité par le protocole ESP. L'algorithme utilisé pour cela est configuré dans les routeurs (`transform-set STRONG esp-sha-hmac`). On peut également le voir lors de la phase 1, lors de l'échange des proposals entre routeurs. L'algorithme utilisé est donc *HMAC-SHA1*.
+Toute la partie IP encapsulée par ESP est protégée en intégrité par le protocole ESP. L'algorithme utilisé pour cela est configuré dans les routeurs (`transform-set STRONG esp-sha-hmac`). Comme l'algorithme utilisé est *HMAC-SHA1* pour l'authenticité, celui protège également l'intégrité du message (car c'est un *MAC*).
 
 ---
