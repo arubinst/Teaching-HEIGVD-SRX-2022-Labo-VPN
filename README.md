@@ -107,6 +107,7 @@ Un « protocol » différent de `up` indique la plupart du temps que l’interfa
 ---
 
 **Réponse :**  
+Non, nous arrivons à pinger toutes les interfaces de tous les routeurs.
 
 ---
 
@@ -144,6 +145,7 @@ Pour votre topologie il est utile de contrôler la connectivité entre :
 ---
 
 **Réponse :**  
+Oui, tous les pings ont fonctionné.
 
 ---
 
@@ -167,6 +169,9 @@ Pour déclencher et pratiquer les captures vous allez « pinger » votre routeur
 ---
 
 **Screenshots :**  
+![](images/Q3-R2catpureICMP.png)
+
+![](images/Q3-R1debugICMP.png)
 
 ---
 
@@ -239,6 +244,16 @@ Vous pouvez consulter l’état de votre configuration IKE avec les commandes su
 
 **Réponse :**  
 
+**R1**:
+
+![](images/Q4-IKEPolicy.png)
+TODO
+
+**R2**:
+
+![](images/Q4-R2IKEPolicy.png)
+TODO
+
 ---
 
 
@@ -246,7 +261,17 @@ Vous pouvez consulter l’état de votre configuration IKE avec les commandes su
 
 ---
 
-**Réponse :**  
+**Réponse :**
+
+**R1**:
+
+![](images/Q5-R1_IKEKey.png)
+TODO
+
+**R2**:
+
+![](images/Q5-R2_IKEKey.png)
+TODO
 
 ---
 
@@ -340,6 +365,18 @@ Pensez à démarrer votre sniffer sur la sortie du routeur R2 vers internet avan
 ---
 
 **Réponse :**  
+
+**R1**:
+
+![](images/Q6-R1debugICMP.png)
+
+Nous voyons dans cette capture ques les réponses ICMP sont envoyées par R2 comme c'était le cas avant la configuration du VPN
+
+**R2**:
+
+![](images/Q6-R2Capture.png)
+
+Sur R2 nous remarquons que le `debug ip icmp` n'a plus rien affiché. Ceci est dû au fait que le trafic transitant à travers R2 est maintenant chiffré et ne peut donc pas être identifié comme étant du trafic ICMP. En effet, nous voyons ceci également dans la capture Wireshark faite sur l'interface eth0/0 du routeur R2. Le trafic qui était avant `ICMP` est maintenant du `ESP`, soit du trafic chiffré.
 
 ---
 
