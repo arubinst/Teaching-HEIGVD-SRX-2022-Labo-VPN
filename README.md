@@ -242,17 +242,21 @@ Vous pouvez consulter l’état de votre configuration IKE avec les commandes su
 
 ---
 
-**Réponse :**  
+**Réponse :** 
+
+Nous voyons ici les policies configurées pour la négociation IKE. Ces policies sont les paramètres de connexion qui sont acceptés pour initier une connexion IKE. L'entité établissant la connexion envoie ses policies définies à l'entité à laquelle elle souhaite se connecter. L'entité contactée vérifie alors si l'une de ces policies correspond à une de ses policies locales.
 
 **R1**:
 
 ![](images/Q4-IKEPolicy.png)
-TODO
+
+Sur R1 nous voyons que nous n'avons défini qu'une seule policy. Soit, il n'existe qu'une seule manière de converser en IKE avec R1. 
 
 **R2**:
 
 ![](images/Q4-R2IKEPolicy.png)
-TODO
+
+R2, quant à lui, possède deux policies. Celle avec la priorité 20 est la même que sur R2, et sera donc celle qui sera utilisée pour établir la connexion IKE.
 
 ---
 
@@ -263,15 +267,19 @@ TODO
 
 **Réponse :**
 
+Nous voyons ici les clés qui sont définies pour IKEv2. Nous remarquons que chaque clé définie est associée à une adresse IP distante pour laquelle cette clé est valide. 
+
 **R1**:
 
 ![](images/Q5-R1_IKEKey.png)
-TODO
+
+R1 possède une pre-shared key `cisco-1` pour l'établissement de la connexion avec 193.200.200.1 (R2).
 
 **R2**:
 
 ![](images/Q5-R2_IKEKey.png)
-TODO
+
+R2 possède une pre-shared key `cisco-1` pour l'établissement de la connexion avec 193.100.100.1 (R1).
 
 ---
 
@@ -376,7 +384,7 @@ Nous voyons dans cette capture ques les réponses ICMP sont envoyées par R2 com
 
 ![](images/Q6-R2Capture.png)
 
-Sur R2 nous remarquons que le `debug ip icmp` n'a plus rien affiché. Ceci est dû au fait que le trafic transitant à travers R2 est maintenant chiffré et ne peut donc pas être identifié comme étant du trafic ICMP. En effet, nous voyons ceci également dans la capture Wireshark faite sur l'interface eth0/0 du routeur R2. Le trafic qui était avant `ICMP` est maintenant du `ESP`, soit du trafic chiffré.
+Sur R2 nous remarquons que le `debug ip icmp` n'a plus rien affiché. Ceci est dû au fait que le trafic transitant à travers R2 est maintenant chiffré et ne peut donc pas être identifié comme étant du trafic ICMP. En effet, nous voyons ceci également dans la capture Wireshark faite sur l'interface eth0/0 du routeur R2. Le trafic qui était avant `ICMP` est maintenant du `ESP`, soit du trafic chiffré dans IPSec.
 
 ---
 
@@ -384,7 +392,21 @@ Sur R2 nous remarquons que le `debug ip icmp` n'a plus rien affiché. Ceci est d
 
 ---
 
-**Réponse :**  
+**Réponse :**
+
+Pour répondre à cette question, partons des commandes que nous avons tapées sur les routeurs et expliquons ce que font chacune d'elles:
+
+**Timers IKE**:
+
+- `crypto isakmp policy 20;  lifetime 1800`: Le timer configuré dans la policy (proposal) IKE est la durée de vie de la SA IKE négociée en phase 1. Soit, la SA doit être renégociée toutes les 30 minutes.
+
+- `crypto isakmp keepalive 30 3`: Le timer `keepalive` est la durée après laquelle un paquet est automatiquement passé dans le tunnel pour vérifier la disponibilité de l'hôte distant et s'il est toujours capable de recevoir du trafic chiffré. [source](https://www.cisco.com/c/en/us/support/docs/content-networking/keepalives/118390-technote-keepalive-00.html).
+
+**Timers IPSec**:
+
+- `crypto ipsec security-association lifetime seconds 300`: Le timer `lifetime` de la SA IPSec est la durée au bout de laquelle les clés de chiffrement/déchiffrement IPSec sont renégociées. On peut aussi forcer cette renégociation après une certaine quantité de trafic généré avec la commande `crypto ipsec security-association lifetime kilobytes 2560`. [source](https://www.comparitech.com/blog/information-security/ipsec-encryption/)
+
+- `crypto map MY-CRYPTO 10 ipsec-isakmp; set security-association idle-time 900`: Le timer configuré dans la crypto map permet de supprimer les SA contenant des pairs inactifs avant l'expiration du timer global (celui configuré dans `crypto ipsec security-association`). Vu que la valeur de ce timer est supérieur à celle configurée globalement, et que la renégociation des clés génère du trafic sur le tunnel, ce paramètre est concretment inutile configuré ainsi.
 
 ---
 
@@ -398,7 +420,11 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 ---
 
-**Réponse :**  
+**Réponse :** 
+
+Nous savons que nous avons configuré IKE pour l'établissement du tunnel IPSec avec les commandes `crypto isakmp`.
+
+Nous savons que le trafic est chiffré et authentifié avec ESP car nous l'avons vu dans la capture wireshark de la question 5. 
 
 ---
 
@@ -409,6 +435,19 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 **Réponse :**  
 
+Notre tunnel IPSec est configuré en mode tunnel. Nous pouvons voir ceci en activant le débug ipsec avec la commande `debug crypto ipsec`, puis en envoyant un ping sur R1 depuis VPC:
+
+![](images/Q9-tunnel.png)
+
+De plus, nous pouvons le savoir en regardant le transform-set que nous avons configuré plus tôt avec la commande `crypto map MY-CRYPTO 10 ipsec-isakmp; set transform-set STRONG`. 
+
+
+![](images/Q9-transform.png)
+
+Nous pouvons aussi le voir dans Wireshark. Le fait que les paquets ESP ont comme source et destination l'adresse IP des routeurs indique que l'entête-IP a été modifiée, et ceci n'est fait dans ESP que lorsqu'il est en mode tunnel.
+
+![](images/Q9-wireshark.png)
+
 ---
 
 
@@ -416,7 +455,15 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 ---
 
-**Réponse :**  
+**Réponse :**
+
+Les parties chiffrées sont: données, entête IP originale et le trailer ESP.
+
+Le chiffrement se fait avec esp-192-aes. Nous pouvons le savoir en regardant le transform-set STRONG appliqué avec la commande `show crypto ipsec transform-set`
+
+![](images/Q10-encryption.png)
+
+[source](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_conn_vpnips/configuration/xe-3s/sec-sec-for-vpns-w-ipsec-xe-3s-book/sec-cfg-vpn-ipsec.html#GUID-0337AA98-9BCD-4F2C-90C4-5B45690C203B)
 
 ---
 
@@ -425,7 +472,15 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 ---
 
-**Réponse :**  
+**Réponse :**
+
+Les parties authentifiées sont: données, entête IP originale, ESP header et ESP trailer.
+
+La signature se fait avec SHA-HMAC. Nous pouvons le trouver dans le transform-set STRONG avec la commande `show crypto ipsec transform-set`.
+
+![](images/Q10-authentication.png)
+
+[source](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_conn_vpnips/configuration/xe-3s/sec-sec-for-vpns-w-ipsec-xe-3s-book/sec-cfg-vpn-ipsec.html#GUID-0337AA98-9BCD-4F2C-90C4-5B45690C203B)
 
 ---
 
@@ -435,5 +490,7 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 ---
 
 **Réponse :**  
+
+
 
 ---
