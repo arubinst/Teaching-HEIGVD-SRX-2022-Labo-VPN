@@ -491,6 +491,6 @@ La signature se fait avec SHA-HMAC. Nous pouvons le trouver dans le transform-se
 
 **Réponse :**  
 
-
+Vu que nous utilisons un HMAC pour contrôler l'authenticité du paquet, et que HMAC fournit aussi la vérification d'intégrité, nous pouvons dire que les parties du paquet protégé en intégrité sont les mêmes que pour l'authentification. Les données, l'entête IP originale, ainsi que le header et trailer ESP sont donc protégés en intégrité avec l'alogrithme `esp-sha-hmac`. [source](https://security.stackexchange.com/questions/220740/hmac-and-integrity)
 
 ---
