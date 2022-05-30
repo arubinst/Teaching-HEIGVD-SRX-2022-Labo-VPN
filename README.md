@@ -327,6 +327,8 @@ Keyring      Hostname/Address                            Preshared Key
 default      193.100.100.1                               cisco-1
 ```
 
+On remarque que la clé est relativement faible en terme de sécurité. Ce n'est probablement pas une bonne clé à utiliser dans une infrastructure réaliste.
+
 ---
 
 ## Configuration IPsec
