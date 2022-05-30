@@ -30,8 +30,8 @@ Dans ce travail de laboratoire, vous allez configurer des routeurs Cisco émulé
 -	Capture Sniffer avec filtres précis sur la communication à épier
 -	Activation du mode « debug » pour certaines fonctions du routeur
 -	Observation des protocoles IPSec
- 
- 
+
+
 ## Matériel
 
 Le logiciel d'émulation à utiliser c'est eve-ng (vous l'avez déjà employé). Vous trouverez ici un [guide très condensé](files/Manuel_EVE-NG.pdf) pour l'utilisation et l'installation de eve-ng.
@@ -109,6 +109,10 @@ Un « protocol » différent de `up` indique la plupart du temps que l’interfa
 **Réponse :**  
 Non, nous arrivons à pinger toutes les interfaces de tous les routeurs.
 
+![Q1_ping1](images/Q1_ping1.png)
+
+![Q1_ping2](images/Q1_ping2.png)
+
 ---
 
 
@@ -146,6 +150,8 @@ Pour votre topologie il est utile de contrôler la connectivité entre :
 
 **Réponse :**  
 Oui, tous les pings ont fonctionné.
+
+Nb: il faut lancer la commande `ip dhcp` sur la machine VPC pour qu'elle obtienne une ip après démarrage.
 
 ---
 
@@ -214,7 +220,8 @@ crypto isakmp policy 20
   group 5
   lifetime 1800
 crypto isakmp key cisco-1 address 193.200.200.1 no-xauth
-crypto isakmp keepalive 30 3
+crypto isakmp key cisco-1 address 193.200.200.1 no-xauth
+
 ```
 
 Sur le routeur R2 nous activons un « proposal » IKE supplémentaire comme suit :
@@ -259,7 +266,6 @@ Sur R1 nous voyons que nous n'avons défini qu'une seule policy. Soit, il n'exis
 R2, quant à lui, possède deux policies. Celle avec la priorité 20 est la même que sur R2, et sera donc celle qui sera utilisée pour établir la connexion IKE.
 
 ---
-
 
 **Question 5: Utilisez la commande `show crypto isakmp key` et faites part de vos remarques :**
 
@@ -314,6 +320,8 @@ crypto map MY-CRYPTO 10 ipsec-isakmp
   match address TO-CRYPT
 ```
 
+![Ipsec_activation_R1](images/Ipsec_activation_R1.png)
+
 Les commandes de configurations sur R2 ressembleront à ce qui suit :
 
 ```
@@ -330,6 +338,8 @@ crypto map MY-CRYPTO 10 ipsec-isakmp
   match address TO-CRYPT
 ```
 
+![Ipsec_activation_R2](images/Ipsec_activation_R2.png)
+
 Vous pouvez contrôler votre configuration IPsec avec les commandes suivantes :
 
 ```
@@ -338,6 +348,8 @@ show crypto ipsec transform-set
 show access-list TO-CRYPT
 show crypto map
 ```
+
+
 
 ## Activation IPsec & test
 
@@ -357,8 +369,9 @@ interface Ethernet0/0
   crypto map MY-CRYPTO
 ```
 
-
 Après avoir entré cette commande, normalement le routeur vous indique que IKE (ISAKMP) est activé. Vous pouvez contrôler que votre « crypto map » est bien appliquée sur une interface avec la commande `show crypto map`.
+
+![ipsec_activation_test](images/ipsec_activation_test.png)
 
 Pour tester si votre VPN est correctement configuré vous pouvez maintenant lancer un « ping » sur la « loopback 1 » de votre routeur RX1 (172.16.1.1) depuis votre poste utilisateur (172.17.1.100). De manière à recevoir toutes les notifications possibles pour des paquets ICMP envoyés à un routeur comme RX1 vous pouvez activer un « debug » pour cela. La commande serait :
 
@@ -398,7 +411,7 @@ Pour répondre à cette question, partons des commandes que nous avons tapées s
 
 **Timers IKE**:
 
-- `crypto isakmp policy 20;  lifetime 1800`: Le timer configuré dans la policy (proposal) IKE est la durée de vie de la SA IKE négociée en phase 1. Soit, la SA doit être renégociée toutes les 30 minutes.
+- `crypto isakmp policy 20;  lifetime 1800`: Le timer configuré dans la policy (proposal) IKE est la durée de vie de la SA IKE négociée en phase 1. Soit, la SA doit être renégociée toutes les 30 minutes. [source](https://www.cisco.com/c/en/us/td/docs/security/asa/asa72/configuration/guide/conf_gd/ike.html)
 
 - `crypto isakmp keepalive 30 3`: Le timer `keepalive` est la durée après laquelle un paquet est automatiquement passé dans le tunnel pour vérifier la disponibilité de l'hôte distant et s'il est toujours capable de recevoir du trafic chiffré. [source](https://www.cisco.com/c/en/us/support/docs/content-networking/keepalives/118390-technote-keepalive-00.html).
 
@@ -406,7 +419,7 @@ Pour répondre à cette question, partons des commandes que nous avons tapées s
 
 - `crypto ipsec security-association lifetime seconds 300`: Le timer `lifetime` de la SA IPSec est la durée au bout de laquelle les clés de chiffrement/déchiffrement IPSec sont renégociées. On peut aussi forcer cette renégociation après une certaine quantité de trafic généré avec la commande `crypto ipsec security-association lifetime kilobytes 2560`. [source](https://www.comparitech.com/blog/information-security/ipsec-encryption/)
 
-- `crypto map MY-CRYPTO 10 ipsec-isakmp; set security-association idle-time 900`: Le timer configuré dans la crypto map permet de supprimer les SA contenant des pairs inactifs avant l'expiration du timer global (celui configuré dans `crypto ipsec security-association`). Vu que la valeur de ce timer est supérieur à celle configurée globalement, et que la renégociation des clés génère du trafic sur le tunnel, ce paramètre est concretment inutile configuré ainsi.
+- `crypto map MY-CRYPTO 10 ipsec-isakmp; set security-association idle-time 900`: Le timer configuré dans la crypto map permet de supprimer les SA contenant des pairs inactifs avant l'expiration du timer global (celui configuré dans `crypto ipsec security-association`). Vu que la valeur de ce timer est supérieur à celle configurée globalement, et que la renégociation des clés génère du trafic sur le tunnel, ce paramètre est concrètement inutile configuré ainsi.
 
 ---
 
@@ -435,7 +448,7 @@ Nous savons que le trafic est chiffré et authentifié avec ESP car nous l'avons
 
 **Réponse :**  
 
-Notre tunnel IPSec est configuré en mode tunnel. Nous pouvons voir ceci en activant le débug ipsec avec la commande `debug crypto ipsec`, puis en envoyant un ping sur R1 depuis VPC:
+Notre tunnel IPSec est configuré en mode tunnel. Nous pouvons voir ceci en activant le debug ipsec avec la commande `debug crypto ipsec`, puis en envoyant un ping sur R1 depuis VPC:
 
 ![](images/Q9-tunnel.png)
 
