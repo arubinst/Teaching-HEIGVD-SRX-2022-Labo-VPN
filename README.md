@@ -108,11 +108,10 @@ Un « protocol » différent de `up` indique la plupart du temps que l’interfa
 
 **Réponse :**  
 
-GUILAIN:
 Toutes les interfaces sont bien configurées. Le routage ne s'effectue pas entre
 la machine du LAN 2 et l'extérieur du LAN. Cela était du au fait que le DHCP
 présent sur R2 n'avait pas attribué d'addresse IP au la machine VPC. Pour
-régléer le problème, il a suffit d'effectuer la commande ip `dhcp` sur la
+régler le problème, il a suffit d'effectuer la commande ip `dhcp` sur la
 machine VPC.
 
 
@@ -152,8 +151,7 @@ Pour votre topologie il est utile de contrôler la connectivité entre :
 ---
 
 **Réponse :**  
-
-GUILAIN: 
+ 
 Oui, tous les pings sont passés.
 
 ---
@@ -289,12 +287,12 @@ Protection suite of priority 20
 On peut constater que RX1 possède une configuration de priorité 20 qui utilise
 AES avec une clé de 256 bits ainsi qu'une durée de vie de 1800 secondes.
 
-En revanche RX2 possède deux configuration avec priorités différentes. Une à 10
+En revanche RX2 possède deux configurations avec priorités différentes. Une à 10
 qui utilise 3DES et une à 20 qui utilise AES.
 
 Lors de la négociation, la priorité la plus haute est appliquée en première si
 les deux appareils peuvent les appliquer. Sinon les autres configurations sont
-testés dan l'ordre décroissant de priorité
+testés dans l'ordre décroissant de priorité
 
 ---
 
@@ -317,6 +315,12 @@ Keyring      Hostname/Address                            Preshared Key
 
 default      193.100.100.1                               cisco-1
 ```
+
+Les deux preshared Keys sont les mêmes. Cela est dû au fait que nous l'avons
+configuré avec une preshared key valant "cisco-1".
+
+Ces preshared keys ne servent qu'a s'authentifier. C'est ensuit IKE qui va se
+charger d'échanger la clé.
 
 ---
 
@@ -429,14 +433,18 @@ c'est un PING ou autre chose.
 
 **Réponse :**  
 
-Les timers permettent de mitiger les attaques par bruteforce ou toute autre
-méthode pour récupérer les clés. Lors que le timer est écoulé, les clés sont
+Les lifetimes timers permettent de mitiger les attaques par bruteforce ou toute autre
+méthode pour récupérer les clés. Lorsque le timer est écoulé, les clés sont
 à nouveau négociées et sont modifiées. Cela signifie que dans le cas ou un
 attaquant obtiendrait une clé, elle lui permettrait de déchiffrer le traffic que
 pendant une période limitée. Cette période peut etre spécifiée en temps ou en
 volume de traffic, ou les deux. 
 
-Dans notre cas, la durée de vie a été configurée à 2500 kB et / ou 300 secondes.
+Dans notre cas, la durée de vie a été configurée à 2500 kB ou 300 secondes.
+
+Les idle timers permettent de suprimer les SAs lorsque une paire est inactive
+pendante trop longtemps. Ceci évite de gaspiller des ressources sur des paires
+inactives et donc de risquer des attaques par DoS par exemple.
 
 ---
 
@@ -488,8 +496,9 @@ réalisé par AES 192 bits (Taille de la clé)
 ---
 
 **Réponse :**  
-En mode tunnel, l'intégralité des paquets est authentifiée.Elle est réalisée
-avec SHA-HMAC
+En mode tunnel, l'intégralité des paquets est authentifiée, c'est à dire
+l'entête IP originale, le protocol (TCP/UDP), les informations d'IPSec et les 
+données. Elle est réalisée avec SHA-HMAC. 
 
 ---
 
@@ -501,6 +510,6 @@ avec SHA-HMAC
 **Réponse :**  
 
 En mode tunnel, l'intégralité de l'intégrité des paquets est vérifiée et ce
-grâce à SHA-HMAC.
+grâce à SHA-HMAC (comme pour l'authenticité).
 
 ---
