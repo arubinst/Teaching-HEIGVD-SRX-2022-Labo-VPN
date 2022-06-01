@@ -108,6 +108,9 @@ Un « protocol » différent de `up` indique la plupart du temps que l’interfa
 
 **Réponse :**  
 
+Tous les routeurs sont configurés correctement. Ils ont les adresses prévues sur les interfaces prévues. Le routeur R2 a également un serveur DHCP activé.  
+N'ayant pas rencontré de problème, je n'ai pas eu à les résoudre.
+
 ---
 
 
@@ -145,6 +148,8 @@ Pour votre topologie il est utile de contrôler la connectivité entre :
 
 **Réponse :**  
 
+Tous les pings ont fonctionnés correctement, je n'ai rien eu à corriger.
+
 ---
 
 - Activation de « debug » et analyse des messages ping.
@@ -167,6 +172,8 @@ Pour déclencher et pratiquer les captures vous allez « pinger » votre routeur
 ---
 
 **Screenshots :**  
+![Screenshot de Wireshark](./images/q3-wireshark.png)
+![Screenshot du routeur R1](./images/q3-r1.png)
 
 ---
 
@@ -249,7 +256,7 @@ choisis, la longueur des clés.
 ---
 
 **Réponse :**  
-On peut voir les clés qui sont ou seront utilisées par les 2 routeurs. On voit aussi l'IP du "voisin" a qui la clé est rattachée.
+On peut voir les clés qui sont ou seront utilisées par les 2 routeurs. On voit aussi l'IP du "voisin" à qui la clé est rattachée.
 
 ---
 
@@ -342,7 +349,12 @@ Pensez à démarrer votre sniffer sur la sortie du routeur R2 vers internet avan
 
 ---
 
-**Réponse :**  
+**Réponse :**
+
+![Screenshot de Wireshark avec VPN](./images/q6-wireshark.png)
+![Screenshot du routeur R1](./images/q6-routeur.png)
+
+Comme on le voit sur les screenshots, les ping sont maintenant chiffrés et donc on ne voit que la négociation ISAKMP et les échanges chiffrés mais il est maintenant impossible de savoir ce qui s'est passé durant cet échange.
 
 ---
 
@@ -350,7 +362,10 @@ Pensez à démarrer votre sniffer sur la sortie du routeur R2 vers internet avan
 
 ---
 
-**Réponse :**  
+**Réponse :**
+
+La commande `crypto ipsec security-association lifetime` spécifie le temps et la taille d'utilisation d'une SA avant qu'elle ne doive être re-négociée.  
+La commande `set security-association idle-time` spécifie la durée d'inactivité autorisée avant que la SA soit droppée.
 
 ---
 
@@ -364,7 +379,14 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 ---
 
-**Réponse :**  
+**Réponse :**
+
+Wireshark montre les deux étapes du VPN et leur protocole utilisé :   
+Dans un premier temps, une clé est échangée (IKE) grâce au protocole ISAKMP.  
+Ensuite, pour créer un tunnel, le payload est entièrement chiffré et encapsulé (ESP).  
+Ceci est observable dans wireshark.
+![Screenshot de Wirehark](./images/q8-wireshark.png)
+Évidemment, comme vu en cours, SPI et IPsec sont utilisés afin d'assurer les échanges et les SPI.
 
 ---
 
@@ -384,7 +406,7 @@ Il s'agit d'un mode tunnel. Tout le paquet original est encapsulé et chiffré d
 ---
 
 **Réponse :**  
-L'entierté du paquet original est chiffré par AES-192.
+L'entièreté du paquet original est chiffré par AES-192.
 
 ---
 
@@ -394,7 +416,7 @@ L'entierté du paquet original est chiffré par AES-192.
 ---
 
 **Réponse :**  
-Encore une fois, tout le contenu est authentifié. L'algo utilisé est HMAC basé sur SHA-1.
+Encore une fois, tout le contenu est authentifié. L'algorithme utilisé est HMAC+SHA-1.
 
 ---
 
@@ -403,6 +425,8 @@ Encore une fois, tout le contenu est authentifié. L'algo utilisé est HMAC bas�
 
 ---
 
-**Réponse :**  
+**Réponse :**
+
+Le paquet étant tunnelisé, son intégrité est entièrement assurée grâce à HMAC+SHA-1.
 
 ---
