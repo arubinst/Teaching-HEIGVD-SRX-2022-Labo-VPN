@@ -476,6 +476,9 @@ Enfin, nous montrons ci-dessous le résultat de la commande de debugging effectu
 Il y a premièrement le timer pour les SA de la première phase du protocole IKE. Il détermine après combien de temps sans utilisation la SA est supprimée.
 Deuxièmement, il y un timer qui détermine à quel intervalle et combien de fois un message ISAKMP peut être renvoyé si aucune réponse n'est reçue.
 
+Les timers sont une protection permettant de se protéger contre les attaques qui tentent d'obtenir les clés. Quand le timer arrive à 0, les clés sont supprimées et le processus de génération de clé est relancé. Cela complique les attaques par bruteforce et même dans le cas où une clé est récupérée, elle ne peut pas être utilisée indéfiniment.
+La période peut être du temps ou/et du trafic de données.
+
 ---
 
 
