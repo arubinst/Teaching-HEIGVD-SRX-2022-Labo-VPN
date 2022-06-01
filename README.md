@@ -322,7 +322,7 @@ Protection suite of priority 20
         lifetime:               1800 seconds, no volume limit
 
 ```
-On peut voir que le routeur 2 possède deux policies. La première affichée et de priorité 10, elle sera utilisée si l'autre ne fonctionne pas. La seconde affichée est la politique par défaut (elle a une priorité suppérieure). Elle est aussi plus sécurisée que la première car elle utilise de meilleurs algorithmes de chiffrement et de hachage.
+On peut voir que le routeur 2 possède deux policies. La première affichée et de priorité 10, elle sera utilisée si l'autre ne fonctionne pas. La seconde affichée est la politique par défaut (elle a une priorité supérieure). Elle est aussi plus sécurisée que la première car elle utilise de meilleurs algorithmes de chiffrement et de hachage.
 
 ---
 
@@ -476,7 +476,7 @@ Enfin, nous montrons ci-dessous le résultat de la commande de debugging effectu
 Il y a premièrement le timer pour les SA de la première phase du protocole IKE. Il détermine après combien de temps sans utilisation la SA est supprimée.
 Deuxièmement, il y un timer qui détermine à quel intervalle et combien de fois un message ISAKMP peut être renvoyé si aucune réponse n'est reçue.
 
-Les timers sont une protection permettant de se protéger contre les attaques qui tentent d'obtenir les clés. Quand le timer arrive à 0, les clés sont supprimées et le processus de génération de clé est relancé. Cela complique les attaques par bruteforce et même dans le cas où une clé est récupérée, elle ne peut pas être utilisée indéfiniment.
+De manière générale, les timers sont une protection permettant de se protéger contre les attaques qui tentent d'obtenir les clés. Quand le timer arrive à 0, les clés sont supprimées et le processus de génération de clé est relancé. Cela complique les attaques par bruteforce et même dans le cas où une clé est récupérée, elle ne peut pas être utilisée indéfiniment.
 La période peut être du temps ou/et du trafic de données.
 
 ---
@@ -513,7 +513,8 @@ C'est le mode transport qui utilisé. En effet, un nouvel en-tête IP est ajout�
 ---
 
 **Réponse :**  
-Tout le paquet IP est chiffré.
+Tout le paquet IP est chiffré en utilisant AES-192.
+
 ---
 
 
@@ -523,6 +524,8 @@ Tout le paquet IP est chiffré.
 
 **Réponse :**  
 
+Le contenu est entièrement authentifié. L'algorithme utilisé est HMAC avec SHA-1.
+
 ---
 
 
@@ -531,6 +534,7 @@ Tout le paquet IP est chiffré.
 ---
 
 **Réponse :**  
+L'intégrité est assurée comme tout le paquet est passé dans le tunnel. Cela est fait grâce à HMAC avec SHA-1.
 
 ---
   
