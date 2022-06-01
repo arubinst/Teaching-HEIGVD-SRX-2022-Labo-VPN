@@ -168,7 +168,14 @@ Pour déclencher et pratiquer les captures vous allez « pinger » votre routeur
 
 ---
 
-**Screenshots :**  
+**Screenshots :**
+
+Affichage du mode icmp debug sur R1 pendant le ping:
+![](images/q3_2_router1.png)
+
+Capture Wireshark montrant le ping dpuis VPC sur R1 ainsi que les réponses:
+![](images/q3_3_wireshark.png)
+
 Remarque: Il n'est pas possible d'appliquer des filtres de capture lorsqu'on ouvre Wireshark depuis EveNg. En effet, la fenêtre d'accueil se ferme automatiquement pour laisser place à la fenêtre de capture, sans que l'on ait la possiblité de sélectionner un filtre de capture.
 
 ---
@@ -294,7 +301,7 @@ Protection suite of priority 20
         Diffie-Hellman group:   #5 (1536 bit)
         lifetime:               1800 seconds, no volume limit
 ```
-On peut voir que ce routeur possède une seule policy. Elle utilise des algorithmes plutôt sécurisés.
+On peut voir que ce routeur possède une seule policy. Elle utilise AES avec des clefs de 256 bits pour chiffrer les données, ce qui à l'heure actuelle garantit un bon niveau de sécurité.
 
 
 
@@ -447,7 +454,17 @@ Pensez à démarrer votre sniffer sur la sortie du routeur R2 vers internet avan
 ---
 
 **Réponse :**  
-TODO
+Nous avons effectué deux séries de ping. Nous montrons ici les captures d'écran liées à la deuxième.
+
+Ci-dessous, on voit que nous effectuons le ping depuis la machine VPC sur l'adresse 172.16.1.1. Tous les ping reçoivent une réponse.
+![](images/q6_vpc.png)
+
+Ci-dessous, on voit le résultat de la capture Wireshark sur l'interface sortante du routeur RX2. L'adresse IP source est celle du routeur RX2. L'adresse IP de destination est celle du routeur RX1. Or, il s'agit d'un ping depuis VPC sur l'adresse 172.16.1.1, comme on le voit sur la capture ci-dessus. Ces différences d'adresses sont dues au fait que le trafic est chiffré par IPSec. A noter que le protocole détecté par Wireshark n'est pas ICPM mais ESP. Donc depuis ce point de  vue, la seule chose que l'on sait, c'est que le trafic est chiffré avec IPSec, mais on a pas d'information sur le protocole des données qui transitent.
+A noter que nous ne voyons pas sur cette capture les messages ISAKMP provoqués par l'authentification et l'échange des clefs. En effet, IKE a été effectué dans un précédent échange dont nous ne montrons pas ici la capture.
+![](images/q6_wshark.png)
+
+Enfin, nous montrons ci-dessous le résultat de la commande de debugging effectuée sur le routeur RX1. De ce troisième point de vue, on voit que le trafic est déchiffré.
+![](images/q6_r1.png)
 
 ---
 
@@ -456,6 +473,8 @@ TODO
 ---
 
 **Réponse :**  
+Il y a premièrement le timer pour les SA de la première phase du protocole IKE. Il détermine après combien de temps sans utilisation la SA est supprimée.
+Deuxièmement, il y un timer qui détermine à quel intervalle et combien de fois un message ISAKMP peut être renvoyé si aucune réponse n'est reçue.
 
 ---
 
@@ -469,7 +488,9 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 ---
 
-**Réponse :**  
+**Réponse :**
+Le protocole IKE avec des messages ISAKMP a été utilisé pour l'établissement de la communication sécurisée (Négociation des protocoles de chiffrement et d'authentification, authentification, échange des clefs pour le chiffrement des données).
+Pour le chiffrement des paquets IP et leur authentification, ESP a été utilisé.
 
 ---
 
@@ -478,7 +499,8 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 ---
 
-**Réponse :**  
+**Réponse :**
+C'est le mode transport qui utilisé. En effet, un nouvel en-tête IP est ajouté aux données chiffrées.
 
 ---
 
@@ -488,7 +510,7 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 ---
 
 **Réponse :**  
-
+Tout le paquet IP est chiffré.
 ---
 
 
@@ -508,3 +530,4 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 **Réponse :**  
 
 ---
+  
