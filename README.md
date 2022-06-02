@@ -404,16 +404,17 @@ Par contre avec Wireshark on ne voit pas les pings, mais bien un paquet encapsul
 
 **Question 7: Reportez dans votre rapport une petite explication concernant les différents « timers » utilisés par IKE et IPsec dans cet exercice (recherche Web). :**
 
-IKE : <br>
-* Lifetime : Spécifie la durée de vie d'une SA. Dans notre cas, ```lifetime 1800``` implique une durée de vie de 30 minutes <br>
-* Keepalive : Permet de contrôler que la paire soit toujours active en envoyant des paquets ```Keepalive```. Dans notre cas ```keepalive 30 3``` signifie qu'on vérifie maximum 3 fois en 30 secondes. <br>
-<br>
-IPsec : <br>
-* idle-time : Détecte et supprime les paires inactives. Ici, ```idle-time 900``` signifie que les paires inactives seront supprimées après 15 minutes d'inactivité. <br>
-* Lifetime : Renouvelle les SA. Ici, ```lifetime seconds 300``` signifie que les SA seront renouvelées toutes les 5 minutes. <br>
 ---
 
 **Réponse :**  
+
+IKE :
+* Lifetime : Spécifie la durée de vie d'une SA. Dans notre cas, ```lifetime 1800``` implique une durée de vie de 30 minutes 
+* Keepalive : Permet de contrôler que la paire soit toujours active en envoyant des paquets ```Keepalive```. Dans notre cas ```keepalive 30 3``` signifie qu'on vérifie maximum 3 fois en 30 secondes.
+
+IPsec :
+* idle-time : Détecte et supprime les paires inactives. Ici, ```idle-time 900``` signifie que les paires inactives seront supprimées après 15 minutes d'inactivité.
+* Lifetime : Renouvelle les SA. Ici, ```lifetime seconds 300``` signifie que les SA seront renouvelées toutes les 5 minutes.
 
 ---
 
