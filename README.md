@@ -430,9 +430,10 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 **Réponse :**  
 ESP et IKE sont utilisés.
+
 ESP est utilisé pour le chiffrement entier des paquets IP.
 
-IKE est utilisé pour la l'établissement de la communication sécurisée à l'aide de négotiation des SA.
+IKE est utilisé pour l'établissement de la communication sécurisée à l'aide de négotiation des SA.
 
 ---
 
