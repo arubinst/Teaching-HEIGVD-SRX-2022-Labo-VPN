@@ -151,6 +151,14 @@ Pour votre topologie il est utile de contrôler la connectivité entre :
 **Réponse :**  
 Oui, tous les pings ont fonctionné.
 
+Ping de `R1` vers `ISP1`:
+
+![](images/Q2_ping_R1.png)
+
+Ping de `R2` vers `ISP2`, `RX1` et `VPC`:
+
+![](images/Q2_ping_R2.png)
+
 Nb: il faut lancer la commande `ip dhcp` sur la machine VPC pour qu'elle obtienne une ip après démarrage.
 
 ---
@@ -474,7 +482,7 @@ Les parties chiffrées sont: données, entête IP originale et le trailer ESP.
 
 Le chiffrement se fait avec esp-192-aes. Nous pouvons le savoir en regardant le transform-set STRONG appliqué avec la commande `show crypto ipsec transform-set`
 
-![](images/Q10-encryption.png)
+![](images/Q10-encryption_2.png)
 
 [source](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_conn_vpnips/configuration/xe-3s/sec-sec-for-vpns-w-ipsec-xe-3s-book/sec-cfg-vpn-ipsec.html#GUID-0337AA98-9BCD-4F2C-90C4-5B45690C203B)
 
@@ -487,11 +495,11 @@ Le chiffrement se fait avec esp-192-aes. Nous pouvons le savoir en regardant le 
 
 **Réponse :**
 
-Les parties authentifiées sont: données, entête IP originale, ESP header et ESP trailer.
+Les parties authentifiées sont: données, entête IP originale, ESP header et ESP trailer, ainsi que des parties de la nouvelle entête IP.
 
 La signature se fait avec SHA-HMAC. Nous pouvons le trouver dans le transform-set STRONG avec la commande `show crypto ipsec transform-set`.
 
-![](images/Q10-authentication.png)
+![](images/Q11-authentication.png)
 
 [source](https://www.cisco.com/c/en/us/td/docs/ios-xml/ios/sec_conn_vpnips/configuration/xe-3s/sec-sec-for-vpns-w-ipsec-xe-3s-book/sec-cfg-vpn-ipsec.html#GUID-0337AA98-9BCD-4F2C-90C4-5B45690C203B)
 
@@ -504,6 +512,6 @@ La signature se fait avec SHA-HMAC. Nous pouvons le trouver dans le transform-se
 
 **Réponse :**  
 
-Vu que nous utilisons un HMAC pour contrôler l'authenticité du paquet, et que HMAC fournit aussi la vérification d'intégrité, nous pouvons dire que les parties du paquet protégé en intégrité sont les mêmes que pour l'authentification. Les données, l'entête IP originale, ainsi que le header et trailer ESP sont donc protégés en intégrité avec l'alogrithme `esp-sha-hmac`. [source](https://security.stackexchange.com/questions/220740/hmac-and-integrity)
+Vu que nous utilisons un HMAC pour contrôler l'authenticité du paquet, et que HMAC fournit aussi la vérification d'intégrité, nous pouvons dire que les parties du paquet protégé en intégrité sont les mêmes que pour l'authentification. Les données, l'entête IP originale, le header et trailer ESP, ainsi que des parties de la nouvelle entête IP sont donc protégés en intégrité avec algorithme `esp-sha-hmac`. [source](https://security.stackexchange.com/questions/220740/hmac-and-integrity)
 
 ---
