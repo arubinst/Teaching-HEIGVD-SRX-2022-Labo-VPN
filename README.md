@@ -106,7 +106,7 @@ Un « protocol » différent de `up` indique la plupart du temps que l’interfa
 
 ---
 
-**Réponse :**  
+**Réponse :**  Nous n'avons pas rencontré de problème.
 
 ---
 
@@ -143,7 +143,14 @@ Pour votre topologie il est utile de contrôler la connectivité entre :
 
 ---
 
-**Réponse :**  
+**Réponse :**  Le VPC n'ayant pas récupérer lui même une adresse IP, nous avons du exéctuer la commande `ip dhcp`.
+
+À présent les pings sont tous fonctionels, voir screenshot ci-dessous.
+
+![question](images/2-1.png)
+![question](images/2-2-isp.png)
+![question](images/2-2-r1.png)
+![question](images/2-2-vpc.png)
 
 ---
 
@@ -167,6 +174,12 @@ Pour déclencher et pratiquer les captures vous allez « pinger » votre routeur
 ---
 
 **Screenshots :**  
+R2:
+![question](images/3-2.png)
+R1:
+![question](images/3-1.png)
+
+Cela fonctionne correctement.
 
 ---
 
@@ -238,6 +251,22 @@ Vous pouvez consulter l’état de votre configuration IKE avec les commandes su
 ---
 
 **Réponse :**  
+
+Cette commande nous permet de voir les policy configurées.
+
+![question](images/4-1.png)
+![question](images/4-2.png)
+
+R2: Possède deux policy. Une 3DES et une AES 256 bits.
+![question](images/4-3.png)
+R1: Possède une seule policy qui utilise AES. Celon la Loi de Moore, une clé de 256 bits est actuellement suffisante pour chiffrer de manière sûr le trafic.
+![question](images/4-4.png)
+
+Les deux routeurs ont en commun une policy, c'est indispensable pour que l'association soit valide.
+
+Attention : 
+* 3DES est une méthode de chiffrement qui devrait être remplacée par AES.
+* MD5 est une méthode de hachage qui devrait être remplacée par SHA-256.
 
 ---
 
