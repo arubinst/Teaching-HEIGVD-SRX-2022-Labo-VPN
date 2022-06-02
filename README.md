@@ -107,6 +107,7 @@ Un « protocol » différent de `up` indique la plupart du temps que l’interfa
 ---
 
 **Réponse :**  
+Tout a fonctionné correctement.
 
 ---
 
@@ -143,7 +144,8 @@ Pour votre topologie il est utile de contrôler la connectivité entre :
 
 ---
 
-**Réponse :**  
+**Réponse :**
+Oui nous avons rencontré un problème d'allocation d'adresse IP avec VPC. Cette machine n'a pas demandé automatiquement d'adresse IP au démarage via le prottocole dhcp. La commande `ip dhcp` a réglé le problème.
 
 ---
 
@@ -166,7 +168,15 @@ Pour déclencher et pratiquer les captures vous allez « pinger » votre routeur
 
 ---
 
-**Screenshots :**  
+**Screenshots :**
+
+Affichage du mode icmp debug sur R1 pendant le ping:
+![](images/q3_2_router1.png)
+
+Capture Wireshark montrant le ping dpuis VPC sur R1 ainsi que les réponses:
+![](images/q3_3_wireshark.png)
+
+Remarque: Il n'est pas possible d'appliquer des filtres de capture lorsqu'on ouvre Wireshark depuis EveNg. En effet, la fenêtre d'accueil se ferme automatiquement pour laisser place à la fenêtre de capture, sans que l'on ait la possiblité de sélectionner un filtre de capture.
 
 ---
 
@@ -233,11 +243,86 @@ crypto isakmp keepalive 30 3
 
 Vous pouvez consulter l’état de votre configuration IKE avec les commandes suivantes. Faites part de vos remarques :
 
+Il faut faire attenton à la syntaxe cisco. Il faut mettre des `conf t` ainsi que des `exit` aux bons endroits pour appliquer correctement les commandes. A la fin il faut aussi penser à faire un `wr` pour rendre la configuration permanente<br>
+Cela donne les commandes suivantes :
+
+R1
+```
+conf t
+crypto isakmp policy 20
+  encr aes 256
+  authentication pre-share
+  hash sha
+  group 5
+  lifetime 1800
+  exit
+
+crypto isakmp key cisco-1 address 193.200.200.1 no-xauth
+crypto isakmp keepalive 30 3
+exit
+wr
+```
+
+R2
+```
+conf t
+crypto isakmp policy 10
+  encr 3des
+  authentication pre-share
+  hash md5
+  group 2
+  lifetime 1800
+  exit
+crypto isakmp policy 20
+  encr aes 256
+  authentication pre-share
+  hash sha
+  group 5
+  lifetime 1800
+  exit
+crypto isakmp key cisco-1 address 193.100.100.1 no-xauth
+crypto isakmp keepalive 30 3
+exit
+wr
+```
+
 **Question 4: Utilisez la commande `show crypto isakmp policy` et faites part de vos remarques :**
 
 ---
 
 **Réponse :**  
+R1:
+```
+Global IKE policy
+Protection suite of priority 20
+        encryption algorithm:   AES - Advanced Encryption Standard (256 bit keys).
+        hash algorithm:         Secure Hash Standard
+        authentication method:  Pre-Shared Key
+        Diffie-Hellman group:   #5 (1536 bit)
+        lifetime:               1800 seconds, no volume limit
+```
+On peut voir que ce routeur possède une seule policy. Elle utilise AES avec des clefs de 256 bits pour chiffrer les données, ce qui à l'heure actuelle garantit un bon niveau de sécurité.
+
+
+
+
+R2:
+```
+Protection suite of priority 10
+        encryption algorithm:   Three key triple DES
+        hash algorithm:         Message Digest 5
+        authentication method:  Pre-Shared Key
+        Diffie-Hellman group:   #2 (1024 bit)
+        lifetime:               1800 seconds, no volume limit
+Protection suite of priority 20
+        encryption algorithm:   AES - Advanced Encryption Standard (256 bit keys).
+        hash algorithm:         Secure Hash Standard
+        authentication method:  Pre-Shared Key
+        Diffie-Hellman group:   #5 (1536 bit)
+        lifetime:               1800 seconds, no volume limit
+
+```
+On peut voir que le routeur 2 possède deux policies. La première affichée et de priorité 10, elle sera utilisée si l'autre ne fonctionne pas. La seconde affichée est la politique par défaut (elle a une priorité supérieure). Elle est aussi plus sécurisée que la première car elle utilise de meilleurs algorithmes de chiffrement et de hachage.
 
 ---
 
@@ -247,6 +332,22 @@ Vous pouvez consulter l’état de votre configuration IKE avec les commandes su
 ---
 
 **Réponse :**  
+
+R1:
+```
+Keyring      Hostname/Address                            Preshared Key
+
+default      193.200.200.1                               cisco-1
+```
+
+R2:
+```
+Keyring      Hostname/Address                            Preshared Key
+
+default      193.100.100.1                               cisco-1
+```
+
+On voit pour chacun des routeurs qu'une clé a été générée.
 
 ---
 
@@ -269,33 +370,46 @@ Si inactifs les SA devront être effacés après 15 minutes
 Les commandes de configurations sur R1 ressembleront à ce qui suit :
 
 ```
+conf t
 crypto ipsec security-association lifetime kilobytes 2560
 crypto ipsec security-association lifetime seconds 300
 crypto ipsec transform-set STRONG esp-aes 192 esp-sha-hmac 
   ip access-list extended TO-CRYPT
   permit ip 172.16.1.0 0.0.0.255 172.17.1.0 0.0.0.255
+  exit
 crypto map MY-CRYPTO 10 ipsec-isakmp 
   set peer 193.200.200.1
   set security-association idle-time 900
   set transform-set STRONG 
   match address TO-CRYPT
+  exit
+exit
+wr
 ```
+(nous avons ajouté des conf t et exit) <br><br>
 
 Les commandes de configurations sur R2 ressembleront à ce qui suit :
 
 ```
+conf t
 crypto ipsec security-association lifetime kilobytes 2560
 crypto ipsec security-association lifetime seconds 300
 crypto ipsec transform-set STRONG esp-aes 192 esp-sha-hmac 
   mode tunnel
   ip access-list extended TO-CRYPT
   permit ip 172.17.1.0 0.0.0.255 172.16.1.0 0.0.0.255
+  exit
 crypto map MY-CRYPTO 10 ipsec-isakmp 
   set peer 193.100.100.1
   set security-association idle-time 900
   set transform-set STRONG 
   match address TO-CRYPT
+  exit
+exit
+wr
 ```
+(nous avons ajouté des conf t et exit)<br><br>
+
 
 Vous pouvez contrôler votre configuration IPsec avec les commandes suivantes :
 
@@ -340,6 +454,17 @@ Pensez à démarrer votre sniffer sur la sortie du routeur R2 vers internet avan
 ---
 
 **Réponse :**  
+Nous avons effectué deux séries de ping. Nous montrons ici les captures d'écran liées à la deuxième.
+
+Ci-dessous, on voit que nous effectuons le ping depuis la machine VPC sur l'adresse 172.16.1.1. Tous les ping reçoivent une réponse.
+![](images/q6_vpc.png)
+
+Ci-dessous, on voit le résultat de la capture Wireshark sur l'interface sortante du routeur RX2. L'adresse IP source est celle du routeur RX2. L'adresse IP de destination est celle du routeur RX1. Or, il s'agit d'un ping depuis VPC sur l'adresse 172.16.1.1, comme on le voit sur la capture ci-dessus. Ces différences d'adresses sont dues au fait que le trafic est chiffré par IPSec. A noter que le protocole détecté par Wireshark n'est pas ICPM mais ESP. Donc depuis ce point de  vue, la seule chose que l'on sait, c'est que le trafic est chiffré avec IPSec, mais on a pas d'information sur le protocole des données qui transitent.
+A noter que nous ne voyons pas sur cette capture les messages ISAKMP provoqués par l'authentification et l'échange des clefs. En effet, IKE a été effectué dans un précédent échange dont nous ne montrons pas ici la capture.
+![](images/q6_wshark.png)
+
+Enfin, nous montrons ci-dessous le résultat de la commande de debugging effectuée sur le routeur RX1. De ce troisième point de vue, on voit que le trafic est déchiffré.
+![](images/q6_r1.png)
 
 ---
 
@@ -348,6 +473,11 @@ Pensez à démarrer votre sniffer sur la sortie du routeur R2 vers internet avan
 ---
 
 **Réponse :**  
+Il y a premièrement le timer pour les SA de la première phase du protocole IKE. Il détermine après combien de temps sans utilisation la SA est supprimée.
+Deuxièmement, il y un timer qui détermine à quel intervalle et combien de fois un message ISAKMP peut être renvoyé si aucune réponse n'est reçue.
+
+De manière générale, les timers sont une protection permettant de se protéger contre les attaques qui tentent d'obtenir les clés. Quand le timer arrive à 0, les clés sont supprimées et le processus de génération de clé est relancé. Cela complique les attaques par bruteforce et même dans le cas où une clé est récupérée, elle ne peut pas être utilisée indéfiniment.
+La période peut être du temps ou/et du trafic de données.
 
 ---
 
@@ -361,7 +491,9 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 ---
 
-**Réponse :**  
+**Réponse :**
+Le protocole IKE avec des messages ISAKMP a été utilisé pour l'établissement de la communication sécurisée (Négociation des protocoles de chiffrement et d'authentification, authentification, échange des clefs pour le chiffrement des données).
+Pour le chiffrement des paquets IP et leur authentification, ESP a été utilisé.
 
 ---
 
@@ -370,7 +502,8 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 ---
 
-**Réponse :**  
+**Réponse :**
+C'est le mode transport qui utilisé. En effet, un nouvel en-tête IP est ajouté aux données chiffrées.
 
 ---
 
@@ -380,6 +513,7 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 ---
 
 **Réponse :**  
+Tout le paquet IP est chiffré en utilisant AES-192.
 
 ---
 
@@ -390,6 +524,8 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 **Réponse :**  
 
+Le contenu est entièrement authentifié. L'algorithme utilisé est HMAC avec SHA-1.
+
 ---
 
 
@@ -398,5 +534,7 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 ---
 
 **Réponse :**  
+L'intégrité est assurée comme tout le paquet est passé dans le tunnel. Cela est fait grâce à HMAC avec SHA-1.
 
 ---
+  
