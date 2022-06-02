@@ -106,7 +106,7 @@ Un « protocol » différent de `up` indique la plupart du temps que l’interfa
 
 ---
 
-**Réponse :**  
+**Réponse :**  Nous n'avons pas rencontré de problème.
 
 ---
 
@@ -143,7 +143,14 @@ Pour votre topologie il est utile de contrôler la connectivité entre :
 
 ---
 
-**Réponse :**  
+**Réponse :**  Le VPC n'ayant pas récupérer lui même une adresse IP, nous avons du exéctuer la commande `ip dhcp`.
+
+À présent les pings sont tous fonctionels, voir screenshot ci-dessous.
+
+![question](images/2-1.png)
+![question](images/2-2-isp.png)
+![question](images/2-2-r1.png)
+![question](images/2-2-vpc.png)
 
 ---
 
@@ -167,6 +174,13 @@ Pour déclencher et pratiquer les captures vous allez « pinger » votre routeur
 ---
 
 **Screenshots :**  
+R2:
+![question](images/3-2.png)
+
+R1:
+![question](images/3-1.png)
+
+Cela fonctionne correctement.
 
 ---
 
@@ -239,6 +253,24 @@ Vous pouvez consulter l’état de votre configuration IKE avec les commandes su
 
 **Réponse :**  
 
+Cette commande nous permet de voir les policy configurées.
+
+![question](images/4-1.png)
+![question](images/4-2.png)
+
+R2: Possède deux policy. Une 3DES et une AES 256 bits.
+![question](images/4-3.png)
+
+R1: Possède une seule policy qui utilise AES. Celon la Loi de Moore, une clé de 256 bits est actuellement suffisante pour chiffrer de manière sûr le trafic.
+
+![question](images/4-4.png)
+
+Les deux routeurs ont en commun une policy, c'est indispensable pour que l'association soit valide.
+
+Attention : 
+* 3DES est une méthode de chiffrement qui devrait être remplacée par AES.
+* MD5 est une méthode de hachage qui devrait être remplacée par SHA-256.
+
 ---
 
 
@@ -247,6 +279,13 @@ Vous pouvez consulter l’état de votre configuration IKE avec les commandes su
 ---
 
 **Réponse :**  
+Pour R1 nous avons :
+![R1](images/q5-r1.png)
+
+Pour R2 nous avons : 
+![R2](images/q5-r2.png)
+On peut observer que chaque routeur possède la clé partagée ```cisco-1```<br>
+On remarque également que le champ ```Hostname/Address``` contient l'adresse IP du routeur qui possède la même clé.
 
 ---
 
@@ -340,11 +379,38 @@ Pensez à démarrer votre sniffer sur la sortie du routeur R2 vers internet avan
 ---
 
 **Réponse :**  
+Configuration de R1 : 
+![R1-command](images/q6-r1-command.png)
+
+Configuration de R2 : 
+![R2-command](images/q6-r2-command.png)
+
+On peut premièrement remarqué les warnings lors de la configuration, car les paramètres que l'on utilise sont inférieurs à ceux recommandés.
+Les configurations sont les suivantes :
+
+Pour R1 : 
+![R1-conf](images/q6-r1-conf.png)
+
+Pour R2 : 
+![R2-conf](images/q6-r2-conf.png)
+
+Les pings sont perçus par le routeur R1 et les en-têtes sont bien visible :
+![R1-ping](images/q6-r1-ping.png)
+
+Par contre avec Wireshark on ne voit pas les pings, mais bien un paquet encapsulé entre R1 et R2 : 
+![R1-wireshark](images/q6-wireshark.png)
 
 ---
 
 **Question 7: Reportez dans votre rapport une petite explication concernant les différents « timers » utilisés par IKE et IPsec dans cet exercice (recherche Web). :**
 
+IKE : <br>
+* Lifetime : Spécifie la durée de vie d'une SA. Dans notre cas, ```lifetime 1800``` implique une durée de vie de 30 minutes <br>
+* Keepalive : Permet de contrôler que la paire soit toujours active en envoyant des paquets ```Keepalive```. Dans notre cas ```keepalive 30 3``` signifie qu'on vérifie maximum 3 fois en 30 secondes. <br>
+<br>
+IPsec : <br>
+* idle-time : Détecte et supprime les paires inactives. Ici, ```idle-time 900``` signifie que les paires inactives seront supprimées après 15 minutes d'inactivité. <br>
+* Lifetime : Renouvelle les SA. Ici, ```lifetime seconds 300``` signifie que les SA seront renouvelées toutes les 5 minutes. <br>
 ---
 
 **Réponse :**  
@@ -377,6 +443,7 @@ IKE est utilisé pour la l'établissement de la communication sécurisée à l'a
 **Réponse :** Comme on peut le constater sur l'image ci-dessous le mode tunnel est activé sur r2 et r1.
 <br>
 ![Mode tunnel](images/Q9-Tunnel.png)
+
 ---
 
 
@@ -387,6 +454,7 @@ IKE est utilisé pour la l'établissement de la communication sécurisée à l'a
 **Réponse :** Comme vu en cours, les paquets Ipsec en mode tunnel sont entièrement chiffrés.
 <br>
 ![Mode tunnel](images/Q10-Tunnel.png)
+
 ---
 
 
@@ -398,6 +466,7 @@ IKE est utilisé pour la l'établissement de la communication sécurisée à l'a
 L'algorithme cryptographique est HMAC avec SHA-1 comme vu dans l'image ci-dessous.
 <br>
 ![Mode tunnel](images/Q11-Crypto.png)
+
 ---
 
 
@@ -408,4 +477,5 @@ L'algorithme cryptographique est HMAC avec SHA-1 comme vu dans l'image ci-dessou
 **Réponse :** L'entièreté du paquet étant authentifiée, il en va de même pour l'integrité de ce dernier.
 <br>
 De ce fait l'algorithme utilisé est le même que pour l'authentification, HMAC et SHA-1.
+
 ---
