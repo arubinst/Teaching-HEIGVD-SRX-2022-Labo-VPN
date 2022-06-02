@@ -108,6 +108,9 @@ Un « protocol » différent de `up` indique la plupart du temps que l’interfa
 
 **Réponse :**  
 
+Tous les routeurs sont configurés correctement. Ils ont les adresses prévues sur les interfaces prévues. Le routeur R2 a également un serveur DHCP activé.  
+N'ayant pas rencontré de problème, je n'ai pas eu à les résoudre.
+
 ---
 
 
@@ -145,6 +148,8 @@ Pour votre topologie il est utile de contrôler la connectivité entre :
 
 **Réponse :**  
 
+Tous les pings ont fonctionnés correctement, je n'ai rien eu à corriger.
+
 ---
 
 - Activation de « debug » et analyse des messages ping.
@@ -167,6 +172,8 @@ Pour déclencher et pratiquer les captures vous allez « pinger » votre routeur
 ---
 
 **Screenshots :**  
+![Screenshot de Wireshark](./images/q3-wireshark.png)
+![Screenshot du routeur R1](./images/q3-r1.png)
 
 ---
 
@@ -237,7 +244,8 @@ Vous pouvez consulter l’état de votre configuration IKE avec les commandes su
 
 ---
 
-**Réponse :**  
+**Réponse :**
+Cette commande affiche la configuration IKE saisie précédemment. On y voit les algorithmes utilisés pour le hash ainsi que pour le chiffrement, la durée de vie des clés.
 
 ---
 
@@ -247,6 +255,7 @@ Vous pouvez consulter l’état de votre configuration IKE avec les commandes su
 ---
 
 **Réponse :**  
+Cette commande montre la ou les clés utilisées pour les différentes SA utilisées ainsi que l'IP liée à la clé.
 
 ---
 
@@ -308,7 +317,7 @@ show crypto map
 
 ## Activation IPsec & test
 
-Pour activer cette configuration IKE & IPsec il faut appliquer le « crypto map » sur l’interface de sortie du trafic où vous voulez que l’encryption prenne place. 
+Pour activer cette configuration IKE & IPsec il faut appliquer le « crypto map » sur l’interface de sortie du trafic où vous voulez que le chiffrement prenne place. 
 
 Sur R1 il s’agit, selon le schéma, de l’interface « Ethernet0/0 » et la configuration sera :
 
@@ -339,7 +348,12 @@ Pensez à démarrer votre sniffer sur la sortie du routeur R2 vers internet avan
 
 ---
 
-**Réponse :**  
+**Réponse :**
+
+![Screenshot de Wireshark avec VPN](./images/q6-wireshark.png)
+![Screenshot du routeur R1](./images/q6-routeur.png)
+
+Comme on le voit sur les screenshots, les ping sont maintenant chiffrés et donc on ne voit que la négociation ISAKMP et les échanges chiffrés, mais il est maintenant impossible de savoir ce qui s'est passé durant cet échange.
 
 ---
 
@@ -347,7 +361,10 @@ Pensez à démarrer votre sniffer sur la sortie du routeur R2 vers internet avan
 
 ---
 
-**Réponse :**  
+**Réponse :**
+
+La commande `crypto ipsec security-association lifetime` spécifie le temps et la taille d'utilisation d'une SA avant qu'elle ne doive être re-négociée.  
+La commande `set security-association idle-time` spécifie la durée d'inactivité autorisée avant que la SA ne soit droppée.
 
 ---
 
@@ -361,7 +378,14 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 ---
 
-**Réponse :**  
+**Réponse :**
+
+Wireshark montre les deux étapes du VPN et leur protocole utilisé :  
+Dans un premier temps, une clé est échangée (IKE) grâce au protocole ISAKMP.  
+Ensuite, pour créer un tunnel, le payload est entièrement chiffré et encapsulé (ESP).  
+Ceci est observable dans wireshark.
+![Screenshot de Wirehark](./images/q8-wireshark.png)
+Évidemment, comme vu en cours, SPI et IPsec sont utilisés afin d'assurer les échanges et les SPI.
 
 ---
 
@@ -371,6 +395,7 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 ---
 
 **Réponse :**  
+Il s'agit d'un mode tunnel. Tout le paquet original est encapsulé et chiffré dans un nouveau paquet qui est transmis à l'autre routeur.
 
 ---
 
@@ -380,6 +405,7 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 ---
 
 **Réponse :**  
+L'entièreté du paquet original est chiffré par AES-192.
 
 ---
 
@@ -389,6 +415,7 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 ---
 
 **Réponse :**  
+Encore une fois, tout le contenu de chaque paquet est authentifié. L'algorithme utilisé est HMAC+SHA-1.
 
 ---
 
@@ -397,6 +424,8 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 ---
 
-**Réponse :**  
+**Réponse :**
+
+Le paquet étant tunnelisé, son intégrité est entièrement assurée en même temps que son authenticité grâce à HMAC+SHA-1.
 
 ---
