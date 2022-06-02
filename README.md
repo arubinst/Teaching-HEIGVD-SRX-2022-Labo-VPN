@@ -387,12 +387,16 @@ Configuration de R2 :
 
 On peut premièrement remarqué les warnings lors de la configuration, car les paramètres que l'on utilise sont inférieurs à ceux recommandés.
 Les configurations sont les suivantes :
+
 Pour R1 : 
 ![R1-conf](images/q6-r1-conf.png)
+
 Pour R2 : 
 ![R2-conf](images/q6-r2-conf.png)
+
 Les pings sont perçus par le routeur R1 et les en-têtes sont bien visible :
 ![R1-ping](images/q6-r1-ping.png)
+
 Par contre avec Wireshark on ne voit pas les pings, mais bien un paquet encapsulé entre R1 et R2 : 
 ![R1-wireshark](images/q6-wireshark.png)
 
