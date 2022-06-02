@@ -370,7 +370,7 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 ---
 
-**Réponse :**  
+**Réponse :** <br> 
 Comme on peut le constater sur l'image ci-dessous le mode tunnel est activé sur r2 et r1.
 <br>
 ![Mode tunnel](images/Q9-Tunnel.png)
@@ -381,7 +381,7 @@ Comme on peut le constater sur l'image ci-dessous le mode tunnel est activé sur
 
 ---
 
-**Réponse :**  
+**Réponse :** <br>
 Comme vu en cours, les paquets Ipsec en mode tunnel sont entièrement chiffrés.
 <br>
 ![Mode tunnel](images/Q10-Tunnel.png)
@@ -392,7 +392,7 @@ Comme vu en cours, les paquets Ipsec en mode tunnel sont entièrement chiffrés.
 
 ---
 
-**Réponse :**  
+**Réponse :** <br>
 Tout le contenu du paquet est authentifié en mode tunnel.<br>
 L'algorithme cryptographique est HMAC avec SHA-1 comme vu dans l'image ci-dessous.
 <br>
@@ -404,7 +404,7 @@ L'algorithme cryptographique est HMAC avec SHA-1 comme vu dans l'image ci-dessou
 
 ---
 
-**Réponse :**  
+**Réponse :** <br>
 L'entièreté du paquet étant authentifiée, il en va de même pour l'integrité de ce dernier.
 <br>
 De ce fait l'algorithme utilisé est le même que pour l'authentification, HMAC et SHA-1.
