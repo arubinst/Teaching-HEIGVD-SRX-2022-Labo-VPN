@@ -108,6 +108,13 @@ Un « protocol » différent de `up` indique la plupart du temps que l’interfa
 
 **Réponse :**  
 
+Toutes les interfaces sont bien configurées. Le routage ne s'effectue pas entre
+la machine du LAN 2 et l'extérieur du LAN. Cela était du au fait que le DHCP
+présent sur R2 n'avait pas attribué d'addresse IP au la machine VPC. Pour
+régler le problème, il a suffit d'effectuer la commande ip `dhcp` sur la
+machine VPC.
+
+
 ---
 
 
@@ -144,6 +151,8 @@ Pour votre topologie il est utile de contrôler la connectivité entre :
 ---
 
 **Réponse :**  
+ 
+Oui, tous les pings sont passés.
 
 ---
 
@@ -167,6 +176,10 @@ Pour déclencher et pratiquer les captures vous allez « pinger » votre routeur
 ---
 
 **Screenshots :**  
+
+![Capture Wireshark Ping VPC-R1](images/SRX-Labo04-Wireshark-PingVPC-R1.png)
+
+![Debug R1 Ping VPC-R1](images/SRX-Labo04-R1-PingVPCR1.png)
 
 ---
 
@@ -235,9 +248,51 @@ Vous pouvez consulter l’état de votre configuration IKE avec les commandes su
 
 **Question 4: Utilisez la commande `show crypto isakmp policy` et faites part de vos remarques :**
 
+Lors de la négociation, la priorité la plus haute est appliquée en première si
+les deux appareils peuvent les appliquer. Sinon les autres configurations sont
+testés dan l'ordre decroissant de priorité
+
 ---
 
 **Réponse :**  
+
+```
+RX1#show crypto isakmp policy
+
+Global IKE policy
+Protection suite of priority 20
+	encryption algorithm:	AES - Advanced Encryption Standard (256 bit keys).
+	hash algorithm:		Secure Hash Standard
+	authentication method:	Pre-Shared Key
+	Diffie-Hellman group:	#5 (1536 bit)
+	lifetime:		1800 seconds, no volume limit
+
+RX2#show crypto isakmp policy
+
+Global IKE policy
+Protection suite of priority 10
+	encryption algorithm:	Three key triple DES
+	hash algorithm:		Message Digest 5
+	authentication method:	Pre-Shared Key
+	Diffie-Hellman group:	#2 (1024 bit)
+	lifetime:		1800 seconds, no volume limit
+Protection suite of priority 20
+	encryption algorithm:	AES - Advanced Encryption Standard (256 bit keys).
+	hash algorithm:		Secure Hash Standard
+	authentication method:	Pre-Shared Key
+	Diffie-Hellman group:	#5 (1536 bit)
+	lifetime:		1800 seconds, no volume limit
+```
+
+On peut constater que RX1 possède une configuration de priorité 20 qui utilise
+AES avec une clé de 256 bits ainsi qu'une durée de vie de 1800 secondes.
+
+En revanche RX2 possède deux configurations avec priorités différentes. Une à 10
+qui utilise 3DES et une à 20 qui utilise AES.
+
+Lors de la négociation, la priorité la plus haute est appliquée en première si
+les deux appareils peuvent les appliquer. Sinon les autres configurations sont
+testés dans l'ordre décroissant de priorité
 
 ---
 
@@ -247,6 +302,25 @@ Vous pouvez consulter l’état de votre configuration IKE avec les commandes su
 ---
 
 **Réponse :**  
+
+
+```
+RX1#show crypto isakmp key
+Keyring      Hostname/Address                            Preshared Key
+
+default      193.200.200.1                               cisco-1
+
+RX2#show crypto isakmp key
+Keyring      Hostname/Address                            Preshared Key
+
+default      193.100.100.1                               cisco-1
+```
+
+Les deux preshared Keys sont les mêmes. Cela est dû au fait que nous l'avons
+configuré avec une preshared key valant "cisco-1".
+
+Ces preshared keys ne servent qu'a s'authentifier. C'est ensuit IKE qui va se
+charger d'échanger la clé.
 
 ---
 
@@ -341,6 +415,16 @@ Pensez à démarrer votre sniffer sur la sortie du routeur R2 vers internet avan
 
 **Réponse :**  
 
+![Capture Wireshark Ping VPC-R1 avec IPSec](images/SRX-Labo04-Wireshark-PingVPC-R1-IPSec.png)
+
+![SRX-Labo04-Wireshark-PingVPC-R1-IPSec-2](figures/SRX-Labo04-Wireshark-PingVPC-R1-IPSec-2.png)
+
+Nous pouvons voir que le trafic est maintenant protégé par le protocole ESP. Il n'est plus
+possible de voir les informations sur les différents paquets comme le montre la
+deuxième capture. On sait juste leur numéro de séquence et le SPI. Il n'est
+également pas possible de déterminer la nature de l'échange, on ne sait pas si
+c'est un PING ou autre chose.
+
 ---
 
 **Question 7: Reportez dans votre rapport une petite explication concernant les différents « timers » utilisés par IKE et IPsec dans cet exercice (recherche Web). :**
@@ -348,6 +432,19 @@ Pensez à démarrer votre sniffer sur la sortie du routeur R2 vers internet avan
 ---
 
 **Réponse :**  
+
+Les lifetimes timers permettent de mitiger les attaques par bruteforce ou toute autre
+méthode pour récupérer les clés. Lorsque le timer est écoulé, les clés sont
+à nouveau négociées et sont modifiées. Cela signifie que dans le cas ou un
+attaquant obtiendrait une clé, elle lui permettrait de déchiffrer le traffic que
+pendant une période limitée. Cette période peut etre spécifiée en temps ou en
+volume de traffic, ou les deux. 
+
+Dans notre cas, la durée de vie a été configurée à 2500 kB ou 300 secondes.
+
+Les idle timers permettent de suprimer les SAs lorsque une paire est inactive
+pendante trop longtemps. Ceci évite de gaspiller des ressources sur des paires
+inactives et donc de risquer des attaques par DoS par exemple.
 
 ---
 
@@ -363,6 +460,10 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 **Réponse :**  
 
+- IKE est utilisé pour négocier les "proposals" SA
+- ESP est utilisé pour fournir la confidentialité et l'intégrité des données,
+  comme le montre les captures Wireshark
+
 ---
 
 
@@ -371,6 +472,8 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 ---
 
 **Réponse :**  
+
+Nous utilisons le transform set STRONG qui utilise le mode tunnel.
 
 ---
 
@@ -381,14 +484,21 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 
 **Réponse :**  
 
+En mode tunnel, l'intégralité des paquets est chiffré. Le chiffrement est
+réalisé par AES 192 bits (Taille de la clé)
+
 ---
 
 
 **Question 11: Expliquez quelles sont les parties du paquet qui sont authentifiées. Donnez l’algorithme cryptographique correspondant.**
 
+
 ---
 
 **Réponse :**  
+En mode tunnel, l'intégralité des paquets est authentifiée, c'est à dire
+l'entête IP originale, le protocol (TCP/UDP), les informations d'IPSec et les 
+données. Elle est réalisée avec SHA-HMAC. 
 
 ---
 
@@ -398,5 +508,8 @@ En vous appuyant sur les notions vues en cours et vos observations en laboratoir
 ---
 
 **Réponse :**  
+
+En mode tunnel, l'intégralité de l'intégrité des paquets est vérifiée et ce
+grâce à SHA-HMAC (comme pour l'authenticité).
 
 ---
